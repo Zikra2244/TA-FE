@@ -1,100 +1,218 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./LandingPage.css";
-import PublicNavbar from "../../components/PublicNavbar/PublicNavbar";
+import Navbar from "../../components/Navbar/Navbar";
 import PublicFooter from "../../components/PublicFooter/PublicFooter";
-
-// Anda bisa ganti URL gambar ini nanti
-const heroImageUrl =
-  "https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjUyOXwwfDF8c2VhcmNofDE4fHxhYnN0cmFjdCUyMGJsdWV8ZW58MHx8fHwxNzMxNTU5MzcyfDA&ixlib=rb-4.0.3&q=80&w=1080";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const cardRef = useRef(null);
+
+  // 1. Logic Mengikuti Gerakan Mouse (Glow & Tilt)
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      // Update posisi mouse untuk glow background
+      setMousePos({ x: e.clientX, y: e.clientY });
+
+      // Logic 3D Tilt untuk Kartu Holografik
+      if (cardRef.current) {
+        const card = cardRef.current;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        // Membatasi rotasi agar tidak terlalu ekstrim (max 12 deg)
+        // Negatif pada X agar rotasi mengikuti arah mouse secara natural
+        const rotateX = ((y - centerY) / centerY) * -12;
+        const rotateY = ((x - centerX) / centerX) * 12;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // Reset kartu ke posisi semula saat mouse keluar
+  const handleMouseLeave = () => {
+    if (cardRef.current) {
+      cardRef.current.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    }
+  };
+
   return (
     <div className="landing-page">
-      <PublicNavbar />
+      {/* Interactive Cursor Glow (Senter Biru yang mengikuti mouse) */}
+      <div
+        className="cursor-glow"
+        style={{ left: mousePos.x, top: mousePos.y }}
+      />
 
-      {/* Hero Section */}
-      <header
-        className="hero-section"
-        style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroImageUrl})`,
-        }}
-      >
-        <div className="hero-content">
-          <h1 className="hero-title">Verifikasi Ijazah Masa Depan.</h1>
-          <h2 className="hero-subtitle">
-            Tokenisasi Aset Akademik Anda sebagai Real-World Asset (RWA) di
-            Blockchain.
-          </h2>
-          <p className="hero-description">
-            Buktikan keaslian, integritas, dan kepemilikan digital (provable
-            ownership) ijazah dan sertifikat Anda secara aman dan transparan.
-          </p>
-          <div className="hero-cta">
-            <button className="cta-primary">Mulai Verifikasi Publik</button>
-            <button className="cta-secondary">Masuk / Daftar</button>
+      <Navbar />
+
+      {/* --- HERO SECTION --- */}
+      <header className="hero-section">
+        <div className="hero-wrapper">
+          {/* --- KIRI: TEXT CONTENT --- */}
+          <div className="hero-content">
+            {/* Badge Status */}
+            <div className="hero-badge">
+              <span className="pulse-dot"></span>
+              Live on Sepolia Testnet
+            </div>
+
+            {/* Judul Utama */}
+            <h1 className="hero-title">
+              The Future of <br />
+              <span className="gradient-text">Academic Proof.</span>
+            </h1>
+
+            {/* Deskripsi */}
+            <p className="hero-subtitle">
+              Platform tokenisasi ijazah berbasis Blockchain. Ubah dokumen fisik
+              menjadi <b>Real-World Asset (RWA)</b> yang abadi, aman, dan
+              transparan.
+            </p>
+
+            {/* Tombol Aksi */}
+            <div className="hero-cta">
+              <Link to="/verify" className="btn-primary-glow">
+                Mulai Verifikasi
+              </Link>
+              <Link to="/login" className="btn-secondary-glass">
+                Masuk Platform
+              </Link>
+            </div>
+
+            {/* Statistik Singkat */}
+          </div>
+
+          {/* --- KANAN: 3D CARD VISUAL --- */}
+          <div className="hero-visual" onMouseLeave={handleMouseLeave}>
+            <div className="holo-card-container" ref={cardRef}>
+              <div className="holo-card-inner">
+                <div className="card-shine"></div>
+
+                {/* Konten Kartu */}
+                <div className="card-content">
+                  {/* Header Kartu */}
+                  <div className="card-header">
+                    <span className="card-pill">OFFICIAL</span>
+                    <span className="card-icon">🎓</span>
+                  </div>
+
+                  {/* Body Kartu (Chip & Garis) */}
+                  <div className="card-body">
+                    <h3>Academic NFT</h3>
+                    <div className="card-chip"></div>
+
+                    {/* Visualisasi Baris Kode/Data */}
+                    <div className="code-lines">
+                      <div className="line l1"></div>
+                      <div className="line l2"></div>
+                      <div className="line l3"></div>
+                    </div>
+                  </div>
+
+                  {/* Footer Kartu (Hash) */}
+                  <div className="card-footer">
+                    <div className="hash-code">0x71C...9A21</div>
+                    <div className="status-indicator">VALID</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Indikator Scroll di Bawah */}
+        <div className="scroll-indicator">
+          <div className="mouse">
+            <div className="wheel"></div>
           </div>
         </div>
       </header>
 
-      {/* Features Section */}
       <section className="features-section">
-        <h2 className="section-title">Mengapa Menggunakan VeriChain?</h2>
-        <div className="features-grid">
-          <div className="feature-card">
-            <h3>🔒 Aman & Terdesentralisasi</h3>
-            <p>
-              Dibangun di atas Jaringan Ethereum, menjamin data tidak dapat
-              diubah (immutable) dan terlindungi kriptografi.
-            </p>
-          </div>
-          <div className="feature-card">
-            <h3>✅ Dapat Dibuktikan (Provable)</h3>
-            <p>
-              Setiap dokumen adalah NFT unik (ERC-721), memberikan bukti
-              kepemilikan digital yang sah dan tidak terbantahkan.
-            </p>
-          </div>
-          <div className="feature-card">
-            <h3>🌍 Terverifikasi Global</h3>
-            <p>
-              Verifikasi instan oleh siapa saja, di mana saja, kapan saja, tanpa
-              perlu bergantung pada perantara institusi.
-            </p>
+        <div className="features-container">
+          <h2 className="section-title">
+            Keunggulan <span className="text-highlight">Teknologi</span>
+          </h2>
+
+          <div className="features-grid">
+            {/* Kartu Fitur 1 */}
+            <div className="feature-box">
+              <div className="feature-glow"></div> {/* Efek hover glow */}
+              <div className="icon-box">🔒</div>
+              <h3>Imutabilitas Total</h3>
+              <p>
+                Data tersimpan abadi di Blockchain Ethereum. Tidak dapat diubah,
+                dihapus, atau dimanipulasi oleh pihak manapun.
+              </p>
+            </div>
+
+            {/* Kartu Fitur 2 */}
+            <div className="feature-box">
+              <div className="feature-glow"></div>
+              <div className="icon-box">💎</div>
+              <h3>Kepemilikan Penuh</h3>
+              <p>
+                Mahasiswa memegang kendali penuh atas aset digital (NFT) di
+                dompet pribadi mereka, bukan di server kampus.
+              </p>
+            </div>
+
+            {/* Kartu Fitur 3 */}
+            <div className="feature-box">
+              <div className="feature-glow"></div>
+              <div className="icon-box">⚡</div>
+              <h3>Verifikasi Instan</h3>
+              <p>
+                Perusahaan dapat memverifikasi keaslian ijazah secara real-time,
+                global, dan tanpa perantara pihak ketiga.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* --- HOW IT WORKS SECTION --- */}
       <section className="how-it-works-section">
-        <h2 className="section-title">Hanya 3 Langkah Sederhana</h2>
+        <h2 className="section-title">Cara Kerja Sistem</h2>
         <div className="steps-container">
           <div className="step-card">
             <div className="step-number">1</div>
-            <h4>Penerbitan (Minting)</h4>
+            <h4>Penerbitan</h4>
             <p>
-              Institusi menerbitkan ijazah sebagai NFT ke dompet treasury aman
-              yang dikelola sistem.
+              Institusi mencetak ijazah digital yang diamankan secara
+              kriptografis oleh Smart Contract.
             </p>
           </div>
+
           <div className="step-card">
             <div className="step-number">2</div>
-            <h4>Klaim (Claim)</h4>
+            <h4>Klaim Aset</h4>
             <p>
-              Mahasiswa melakukan verifikasi 3-faktor untuk mengklaim NFT ke
-              dompet Metamask pribadi mereka.
+              Mahasiswa mengklaim kepemilikan ijazah ke dompet digital
+              (Metamask) melalui otentikasi aman.
             </p>
           </div>
+
           <div className="step-card">
             <div className="step-number">3</div>
-            <h4>Verifikasi (Verify)</h4>
+            <h4>Verifikasi</h4>
             <p>
-              Pihak ketiga (perusahaan, dll) memverifikasi keaslian aset secara
-              publik dan instan via platform.
+              Publik memverifikasi keaslian dokumen secara instan menggunakan ID
+              unik yang transparan.
             </p>
           </div>
         </div>
       </section>
 
+      {/* Footer akan otomatis berada di bawah */}
       <PublicFooter />
     </div>
   );

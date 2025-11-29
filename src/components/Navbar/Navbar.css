@@ -1,0 +1,163 @@
+/* Navbar Container */
+.navbar {
+  width: 100%;
+  position: fixed; /* Fixed agar melayang saat scroll */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background: #0a2540;
+  backdrop-filter: blur(12px); /* Efek Kaca */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo */
+.navbar-logo {
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-logo span {
+  background: linear-gradient(90deg, #00bfff, #00ff94);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Actions Area */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* --- STATE: GUEST --- */
+.nav-link {
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.3s;
+}
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-btn-primary {
+  background: #00bfff;
+  color: #02040a;
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+}
+.nav-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(0, 191, 255, 0.5);
+}
+
+/* --- STATE: LOGGED IN --- */
+.user-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+}
+
+.user-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.user-role-badge {
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+/* Connect Wallet Button */
+.nav-btn-connect {
+  background: transparent;
+  border: 1px solid #00bfff;
+  color: #00bfff;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.nav-btn-connect:hover {
+  background: rgba(0, 191, 255, 0.1);
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+}
+
+/* Wallet Connected Badge */
+.wallet-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 255, 148, 0.1);
+  border: 1px solid rgba(0, 255, 148, 0.3);
+  color: #00ff94;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.dot-online {
+  width: 8px;
+  height: 8px;
+  background: #00ff94;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00ff94;
+}
+
+/* Logout Button */
+.nav-btn-logout {
+  background: transparent;
+  border: none;
+  color: #ef4444; /* Merah */
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: opacity 0.3s;
+}
+.nav-btn-logout:hover {
+  opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-profile {
+    display: none;
+  } /* Sembunyikan nama di HP agar muat */
+  .navbar-container {
+    padding: 0 1rem;
+  }
+  .nav-actions {
+    gap: 1rem;
+  }
+}

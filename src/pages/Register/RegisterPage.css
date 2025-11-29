@@ -1,0 +1,355 @@
+/* ==================================== */
+/* 1. CONTAINER FULL SCREEN (FIXED)     */
+/* ==================================== */
+.register-page {
+  width: 100vw;
+  height: 100vh;
+  background-color: #02040a; /* Darkest Navy */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background Animation (Sama dengan Login) */
+.register-page::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  transform: perspective(500px) rotateX(60deg);
+  animation: gridMove 20s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.register-page::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(0, 191, 255, 0.1), transparent 70%);
+  transform: translate(-50%, -50%);
+  filter: blur(80px);
+  z-index: 0;
+}
+
+/* Tombol Kembali */
+.back-link {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  z-index: 10;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.back-link:hover {
+  color: #00bfff;
+}
+
+/* ==================================== */
+/* 2. REGISTER CARD (GLASSMORPHISM)     */
+/* ==================================== */
+.register-container {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 450px;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: floatUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Agar bisa discroll jika layar HP pendek */
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Sembunyikan Scrollbar default pada card */
+.register-card::-webkit-scrollbar {
+  width: 6px;
+}
+.register-card::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.card-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: shimmer 6s infinite;
+  pointer-events: none;
+}
+
+/* Typography */
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.brand-logo {
+  display: block;
+  font-weight: 800;
+  color: #00bfff;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-family: "Inter", sans-serif;
+}
+
+.form-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: white;
+  font-family: "Inter", sans-serif;
+}
+
+.form-subtitle {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+/* ==================================== */
+/* 3. INPUTS & FORM (CONSISTENT)        */
+/* ==================================== */
+.register-form {
+  width: 100%;
+}
+
+.input-group {
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: "Inter", sans-serif;
+}
+
+/* Style Input & Select */
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background-color: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: "Inter", sans-serif;
+  transition: all 0.3s;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input-group input::placeholder {
+  color: #64748b;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #00bfff;
+  background-color: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.15);
+}
+
+/* CUSTOM DROPDOWN STYLING (Agar option tidak putih) */
+.input-group select {
+  appearance: none; /* Hilangkan panah default browser */
+  cursor: pointer;
+}
+.select-wrapper {
+  position: relative;
+}
+.select-wrapper::after {
+  content: "▼";
+  font-size: 0.8rem;
+  color: #00bfff;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+/* Style untuk Option didalam Dropdown */
+.input-group select option {
+  background-color: #02040a; /* Warna Background Gelap */
+  color: white;
+  padding: 10px;
+}
+
+/* FIX AUTOFILL BACKGROUND */
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover,
+.input-group input:-webkit-autofill:focus,
+.input-group input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Submit Button */
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00bfff 0%, #2563eb 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 1rem;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 191, 255, 0.5);
+}
+
+.btn-submit:disabled {
+  background: #334155;
+  cursor: not-allowed;
+  box-shadow: none;
+  color: #94a3b8;
+}
+
+/* Footer & Error */
+.form-footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  font-family: "Inter", sans-serif;
+}
+.link-highlight {
+  color: #00bfff;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 5px;
+}
+.link-highlight:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  background: rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.5);
+  color: #fecaca;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Animasi Fade In (Untuk Input Institusi) */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Loader */
+.loader {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* Animations */
+@keyframes gridMove {
+  0% {
+    transform: perspective(500px) rotateX(60deg) translateY(0);
+  }
+  100% {
+    transform: perspective(500px) rotateX(60deg) translateY(50px);
+  }
+}
+@keyframes floatUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  50%,
+  100% {
+    left: 200%;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

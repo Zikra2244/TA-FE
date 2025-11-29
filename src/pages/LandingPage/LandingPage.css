@@ -1,191 +1,726 @@
-/* Reset dasar */
+/* ==========================================================================
+   1. GLOBAL CONTAINER & BACKGROUNDS (THE WEB3 ATMOSPHERE)
+   ========================================================================== */
 .landing-page {
-  font-family: "Arial", sans-serif;
-  color: #333;
-  background-color: #f8f9fa; /* Latar belakang abu-abu sangat muda */
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #02040a; /* Ultra Dark Navy */
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
+  position: relative;
+  overflow-x: hidden; /* Mencegah scroll horizontal */
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
 }
 
-/* Hero Section */
+/* Layer 1: Noise Texture (Agar terlihat premium/seperti film) */
+.landing-page::before {
+  content: "";
+  position: fixed; /* Fixed menjamin dia menempel di viewport, bukan konten */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh; /* Paksa Full Viewport */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Layer 2: Aurora Mesh Gradients (Animasi Latar Belakang) */
+.landing-page::after {
+  content: "";
+  position: fixed;
+  top: -30%;
+  right: -10%;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(
+      circle at 50% 50%,
+      rgba(76, 29, 149, 0.15),
+      transparent 60%
+    ),
+    radial-gradient(circle at 100% 0%, rgba(0, 191, 255, 0.1), transparent 50%);
+  filter: blur(80px);
+  z-index: 0;
+  animation: auroraFloat 20s infinite alternate;
+  pointer-events: none;
+}
+
+/* Layer 3: Mouse Follow Glow (Interactive Senter) */
+.cursor-glow {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.08),
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  mix-blend-mode: screen;
+  transition: width 0.2s, height 0.2s; /* Smooth expand */
+}
+
+/* ==========================================================================
+   2. HERO SECTION (FULL SCREEN LAYOUT)
+   ========================================================================== */
 .hero-section {
-  background-size: cover;
-  background-position: center;
-  color: white;
-  text-align: center;
-  padding: 8rem 2rem;
-  min-height: 80vh;
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  width: 100%; /* Full Width */
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 5%;
+  box-sizing: border-box;
+  padding-top: 120px;
 }
 
+.hero-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1280px;
+  gap: 4rem;
+}
+
+/* --- Hero Left: Text Content --- */
 .hero-content {
-  max-width: 800px;
+  flex: 1;
+  max-width: 650px;
+  /* Animasi Masuk */
+  opacity: 0;
+  animation: slideUpFade 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: 0.2s;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  backdrop-filter: blur(10px);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #00ff94; /* Neon Green */
+  border-radius: 50%;
+  box-shadow: 0 0 12px #00ff94;
+  animation: pulse 2s infinite;
 }
 
 .hero-title {
-  font-size: 3.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  line-height: 1.2;
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -2px;
+}
+
+.gradient-text {
+  /* Gradient Mewah: Cyan -> Blue -> Purple */
+  background: linear-gradient(135deg, #22d3ee 0%, #818cf8 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 40px rgba(34, 211, 238, 0.3));
 }
 
 .hero-subtitle {
-  font-size: 1.5rem;
-  font-weight: 400;
-  margin-bottom: 1.5rem;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.25rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  max-width: 90%;
 }
 
-.hero-description {
-  font-size: 1.1rem;
-  margin-bottom: 2.5rem;
-  color: rgba(255, 255, 255, 0.8);
+.hero-subtitle b {
+  color: #e2e8f0;
+  font-weight: 600;
 }
 
+/* CTA Buttons */
 .hero-cta {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 3.5rem;
 }
 
-.hero-cta button {
+.btn-primary-glow {
+  position: relative;
+  padding: 1rem 2.8rem;
+  background: #ffffff;
+  color: #000000;
+  border-radius: 12px;
+  font-weight: 700;
   font-size: 1rem;
-  padding: 0.8rem 1.8rem;
-  border-radius: 6px;
-  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn-primary-glow:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+}
+
+.btn-secondary-glass {
+  padding: 1rem 2.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  border-radius: 12px;
   font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
-  border: none;
+  backdrop-filter: blur(10px);
 }
 
-.cta-primary {
-  background-color: #007bff;
-  color: white;
-}
-
-.cta-primary:hover {
-  background-color: #0056b3;
+.btn-secondary-glass:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
   transform: translateY(-2px);
 }
 
-.cta-secondary {
-  background-color: transparent;
-  color: white;
-  border: 2px solid white;
+/* Stats Row */
+.hero-stats {
+  display: flex;
+  gap: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.stat-item h4 {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 800;
+  color: #fff;
+}
+.stat-item p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 5px;
 }
 
-.cta-secondary:hover {
-  background-color: white;
-  color: #007bff;
-  transform: translateY(-2px);
+/* --- Hero Right: 3D HOLOGRAPHIC CARD --- */
+.hero-visual {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  perspective: 1200px; /* Memberikan kedalaman 3D */
+  z-index: 5;
+  /* Animasi Masuk */
+  opacity: 0;
+  animation: fadeScaleIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: 0.4s;
 }
 
-/* Sections Umum */
-.features-section,
-.how-it-works-section {
-  padding: 5rem 2rem;
-  max-width: 1200px;
+.holo-card-container {
+  width: 380px;
+  height: 560px;
+  transition: transform 0.1s ease-out; /* Smooth tilt follow mouse */
+  transform-style: preserve-3d;
+}
+
+.holo-card-inner {
+  width: 100%;
+  height: 80%;
+  position: relative;
+  border-radius: 30px;
+  /* Ultimate Glassmorphism */
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.3); /* Highlight Edge */
+
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d; /* Penting agar elemen anak melayang (pop-out) */
+}
+
+/* Efek Kilauan (Shimmer) Bergerak */
+.card-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 30px;
+  background: linear-gradient(
+    125deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 45%,
+    transparent 60%
+  );
+  z-index: 1;
+  pointer-events: none;
+  background-size: 200% 200%;
+  animation: shimmerMove 6s infinite linear;
+}
+
+/* Konten Dalam Kartu (Semua Melayang 3D - translateZ) */
+.card-content {
+  padding: 2.5rem;
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translateZ(30px); /* Maju ke depan */
+  z-index: 2;
+}
+
+.card-header {
+  display: flex;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+  transform: translateZ(20px);
+}
+.card-pill {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #000;
+  background: #00ff94;
+  padding: 6px 12px;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0, 255, 148, 0.4);
+}
+.card-icon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+.card-body {
+  text-align: center;
+  transform: translateZ(50px); /* Lebih maju lagi */
+}
+.card-body h3 {
+  font-size: 2rem;
+  margin: 0 0 1.5rem 0;
+  font-weight: 800;
+  background: linear-gradient(to right, #fff, #94a3b8);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card-chip {
+  width: 60px;
+  height: 40px;
+  background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+  border-radius: 8px;
+  margin: 0 auto 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+/* Efek garis di dalam chip */
+.card-chip::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 0 rgba(0, 0, 0, 0.3), 0 -10px 0 rgba(0, 0, 0, 0.3);
+}
+
+.code-lines .line {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.l1 {
+  width: 80%;
+  margin: 0 auto 10px;
+}
+.l2 {
+  width: 60%;
+  margin: 0 auto 10px;
+}
+.l3 {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.5rem;
+  padding-left: 1.5rem;
+  transform: translateZ(20px);
+}
+.hash-code {
+  font-family: "Courier New", monospace;
+  font-size: 0.85rem;
+  color: #60a5fa;
+}
+.status-indicator {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding-right: 1.5rem;
+  color: #00ff94;
+  letter-spacing: 1px;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.6;
+  animation: bounce 2s infinite;
+}
+.mouse {
+  width: 26px;
+  height: 42px;
+  border: 2px solid #fff;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+}
+.wheel {
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  animation: scrollWheel 1.5s infinite;
+}
+
+/* ==========================================================================
+   3. FEATURES SECTION (GRID CARDS)
+   ========================================================================== */
+.features-section {
+  position: relative;
+  z-index: 5;
+  padding: 1.5rem 5%;
+  background: #02040a; /* Seamless transition */
+}
+
+.features-container {
+  max-width: 1280px;
   margin: 0 auto;
 }
 
 .section-title {
   text-align: center;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #0a2540;
-  margin-bottom: 3rem;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 5rem;
+  color: white;
+}
+.text-highlight {
+  color: #60a5fa;
 }
 
-/* Features Section */
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  /* Responsive Grid: Minimal lebar 300px, sisanya fit otomatis */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 3rem;
 }
 
-.feature-card {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+.feature-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 3rem 2rem;
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+/* Hover Effect: Lift Up + Glow Border */
+.feature-box:hover {
+  transform: translateY(-12px);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(59, 130, 246, 0.5); /* Blue Border */
+  box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.15);
 }
 
-.feature-card h3 {
-  font-size: 1.4rem;
-  color: #007bff;
+.icon-box {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  background: rgba(59, 130, 246, 0.1);
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  transition: transform 0.3s;
+}
+.feature-box:hover .icon-box {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.feature-box h3 {
+  font-size: 1.5rem;
   margin-bottom: 1rem;
+  color: white;
+  font-weight: 700;
 }
-
-.feature-card p {
+.feature-box p {
+  color: #94a3b8;
+  line-height: 1.7;
   font-size: 1rem;
-  line-height: 1.6;
-  color: #555;
 }
 
-/* How It Works Section */
+/* Feature Internal Glow (Bola cahaya biru saat hover) */
+.feature-glow {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: #3b82f6;
+  filter: blur(70px);
+  opacity: 0;
+  transition: opacity 0.5s;
+  top: -30px;
+  right: -30px;
+  pointer-events: none;
+}
+.feature-box:hover .feature-glow {
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   4. HOW IT WORKS SECTION
+   ========================================================================== */
 .how-it-works-section {
-  background-color: #ffffff; /* Latar putih untuk variasi */
+  padding: 1.5rem 5%;
+  position: relative;
+  z-index: 5;
+  background: linear-gradient(180deg, #02040a 0%, #050a14 100%);
 }
 
 .steps-container {
   display: flex;
-  justify-content: space-around;
-  gap: 2rem;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .step-card {
   flex: 1;
-  text-align: center;
+  min-width: 280px;
+  background: transparent;
   padding: 2rem;
+  text-align: center;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  transition: background 0.3s;
+}
+.step-card:hover {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .step-number {
-  width: 50px;
-  height: 50px;
-  background-color: #007bff;
-  color: white;
+  width: 60px;
+  height: 60px;
+  background: #00bfff;
+  color: #02040a;
+  font-weight: 800;
+  font-size: 1.8rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 auto 1.5rem auto;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
 }
 
 .step-card h4 {
+  color: white;
+  margin-bottom: 0.8rem;
   font-size: 1.3rem;
-  color: #0a2540;
-  margin-bottom: 1rem;
+  font-weight: 700;
 }
-
 .step-card p {
+  color: #a0aec0;
   font-size: 1rem;
   line-height: 1.6;
-  color: #555;
 }
 
-/* Responsif */
-@media (max-width: 768px) {
+/* ==========================================================================
+   5. ANIMATION KEYFRAMES
+   ========================================================================== */
+@keyframes auroraFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-20px, 20px) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 148, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 255, 148, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 148, 0);
+  }
+}
+
+@keyframes shimmerMove {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes scrollWheel {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+@media (max-width: 1024px) {
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
   }
-  .hero-subtitle {
-    font-size: 1.2rem;
+  .hero-wrapper {
+    gap: 2rem;
   }
+  .holo-card-container {
+    width: 340px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 968px) {
+  .hero-section {
+    padding-top: 100px;
+    height: auto;
+    display: block;
+    padding-bottom: 4rem;
+  }
+  .hero-wrapper {
+    flex-direction: column-reverse; /* Gambar di atas, Teks di bawah pada Mobile */
+    text-align: center;
+  }
+
+  .hero-content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-cta {
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .hero-stats {
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Resize card for mobile */
+  .holo-card-container {
+    width: 300px;
+    height: 450px;
+    margin-bottom: 3rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  } /* 1 Kolom di HP */
   .steps-container {
     flex-direction: column;
-  }
-  .hero-cta {
-    flex-direction: column;
-  }
-  .cta-secondary {
-    background-color: rgba(255, 255, 255, 0.2);
   }
 }
