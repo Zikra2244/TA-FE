@@ -1,0 +1,16 @@
+.public-footer {
+  background-color: #0a2540; /* Biru tua */
+  color: rgba(255, 255, 255, 0.7);
+  padding: 2rem;
+  text-align: center;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.public-footer p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
