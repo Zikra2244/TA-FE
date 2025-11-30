@@ -8,7 +8,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Pemilik Dokumen");
-  const [institutionName, setInstitutionName] = useState("");
+  // HAPUS state institutionName
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -22,9 +22,17 @@ const RegisterPage = () => {
 
     try {
       const backendRole = role === "Pemilik Dokumen" ? "owner" : "issuer";
-      await register(fullName, email, password, backendRole, institutionName);
 
-      alert("Registrasi Berhasil! Silakan Masuk.");
+      // Kita tidak lagi mengirim institutionName
+      await register(fullName, email, password, backendRole);
+
+      if (backendRole === "issuer") {
+        alert(
+          "Registrasi Berhasil! Akun Anda menunggu persetujuan Admin Institusi."
+        );
+      } else {
+        alert("Registrasi Berhasil! Silakan Masuk.");
+      }
       navigate("/login");
     } catch (err) {
       console.error(err);
@@ -36,7 +44,6 @@ const RegisterPage = () => {
 
   return (
     <div className="register-page">
-      {/* Tombol Kembali Konsisten */}
       <Link to="/" className="back-link">
         ← Kembali
       </Link>
@@ -72,8 +79,24 @@ const RegisterPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="email@contoh.com"
+                placeholder={
+                  role === "Penerbit"
+                    ? "nama@domain-institusi.ac.id"
+                    : "email@pribadi.com"
+                }
               />
+              {role === "Penerbit" && (
+                <small
+                  style={{
+                    color: "#94A3B8",
+                    fontSize: "0.8rem",
+                    marginTop: "5px",
+                    display: "block",
+                  }}
+                >
+                  *Wajib menggunakan email resmi institusi.
+                </small>
+              )}
             </div>
 
             <div className="input-group">
@@ -92,24 +115,12 @@ const RegisterPage = () => {
               <div className="select-wrapper">
                 <select value={role} onChange={(e) => setRole(e.target.value)}>
                   <option value="Pemilik Dokumen">Pemilik Dokumen</option>
-                  <option value="Penerbit">Penerbit (Institusi)</option>
+                  <option value="Penerbit">Penerbit </option>
                 </select>
               </div>
             </div>
 
-            {/* Field Kondisional dengan Animasi */}
-            {role === "Penerbit" && (
-              <div className="input-group animate-fade-in">
-                <label>Nama Institusi</label>
-                <input
-                  type="text"
-                  value={institutionName}
-                  onChange={(e) => setInstitutionName(e.target.value)}
-                  required
-                  placeholder="Contoh: Universitas Telkom"
-                />
-              </div>
-            )}
+            {/* Input Nama Institusi DIHAPUS karena otomatis by domain */}
 
             <button type="submit" className="btn-submit" disabled={loading}>
               {loading ? <span className="loader"></span> : "Daftar Sekarang"}

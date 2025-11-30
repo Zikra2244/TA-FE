@@ -18,22 +18,21 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // 1. FUNGSI REGISTER (Menghubungkan ke Backend)
-  const register = async (fullName, email, password, role, institutionName) => {
+  const register = async (fullName, email, password, role) => {
+    // Hapus parameter ke-5
     try {
       const response = await axios.post("/auth/register", {
-        full_name: fullName, // Sesuaikan dengan nama field di database/backend Anda
+        full_name: fullName,
         email: email,
         password: password,
         role: role,
-        institution_name: institutionName,
+        // institution_name dihapus
       });
-      return response.data; // Mengembalikan respon sukses
+      return response.data;
     } catch (error) {
       throw error.response ? error.response.data : new Error("Network Error");
     }
   };
-
   // 2. FUNGSI LOGIN (Menghubungkan ke Backend)
   const login = async (email, password) => {
     try {

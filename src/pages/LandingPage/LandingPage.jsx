@@ -8,13 +8,10 @@ const LandingPage = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const cardRef = useRef(null);
 
-  // 1. Logic Mengikuti Gerakan Mouse (Glow & Tilt)
   useEffect(() => {
     const handleMouseMove = (e) => {
-      // Update posisi mouse untuk glow background
       setMousePos({ x: e.clientX, y: e.clientY });
 
-      // Logic 3D Tilt untuk Kartu Holografik
       if (cardRef.current) {
         const card = cardRef.current;
         const rect = card.getBoundingClientRect();
@@ -23,8 +20,6 @@ const LandingPage = () => {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
-        // Membatasi rotasi agar tidak terlalu ekstrim (max 12 deg)
-        // Negatif pada X agar rotasi mengikuti arah mouse secara natural
         const rotateX = ((y - centerY) / centerY) * -12;
         const rotateY = ((x - centerX) / centerX) * 12;
 
@@ -36,7 +31,6 @@ const LandingPage = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Reset kartu ke posisi semula saat mouse keluar
   const handleMouseLeave = () => {
     if (cardRef.current) {
       cardRef.current.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
@@ -45,7 +39,6 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page">
-      {/* Interactive Cursor Glow (Senter Biru yang mengikuti mouse) */}
       <div
         className="cursor-glow"
         style={{ left: mousePos.x, top: mousePos.y }}
@@ -53,31 +46,25 @@ const LandingPage = () => {
 
       <Navbar />
 
-      {/* --- HERO SECTION --- */}
       <header className="hero-section">
         <div className="hero-wrapper">
-          {/* --- KIRI: TEXT CONTENT --- */}
           <div className="hero-content">
-            {/* Badge Status */}
             <div className="hero-badge">
               <span className="pulse-dot"></span>
               Live on Sepolia Testnet
             </div>
 
-            {/* Judul Utama */}
             <h1 className="hero-title">
               The Future of <br />
               <span className="gradient-text">Academic Proof.</span>
             </h1>
 
-            {/* Deskripsi */}
             <p className="hero-subtitle">
               Platform tokenisasi ijazah berbasis Blockchain. Ubah dokumen fisik
               menjadi <b>Real-World Asset (RWA)</b> yang abadi, aman, dan
               transparan.
             </p>
 
-            {/* Tombol Aksi */}
             <div className="hero-cta">
               <Link to="/verify" className="btn-primary-glow">
                 Mulai Verifikasi
@@ -86,30 +73,23 @@ const LandingPage = () => {
                 Masuk Platform
               </Link>
             </div>
-
-            {/* Statistik Singkat */}
           </div>
 
-          {/* --- KANAN: 3D CARD VISUAL --- */}
           <div className="hero-visual" onMouseLeave={handleMouseLeave}>
             <div className="holo-card-container" ref={cardRef}>
               <div className="holo-card-inner">
                 <div className="card-shine"></div>
 
-                {/* Konten Kartu */}
                 <div className="card-content">
-                  {/* Header Kartu */}
                   <div className="card-header">
                     <span className="card-pill">OFFICIAL</span>
                     <span className="card-icon">🎓</span>
                   </div>
 
-                  {/* Body Kartu (Chip & Garis) */}
                   <div className="card-body">
-                    <h3>Academic NFT</h3>
+                    <h3>Credential NFT</h3>
                     <div className="card-chip"></div>
 
-                    {/* Visualisasi Baris Kode/Data */}
                     <div className="code-lines">
                       <div className="line l1"></div>
                       <div className="line l2"></div>
