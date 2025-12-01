@@ -65,17 +65,14 @@
   transform: translate(-50%, -50%);
   z-index: 2;
   mix-blend-mode: screen;
-  transition: width 0.2s, height 0.2s; /* Smooth expand */
+  transition: width 0.2s, height 0.2s;
 }
 
-/* ==========================================================================
-   2. HERO SECTION (FULL SCREEN LAYOUT)
-   ========================================================================== */
 .hero-section {
   position: relative;
   z-index: 10;
   min-height: 100vh;
-  width: 100%; /* Full Width */
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

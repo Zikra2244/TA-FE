@@ -1,39 +1,37 @@
 import React, { createContext, useState, useEffect } from "react";
-import axios from "../api/axios"; // Import konfigurasi axios tadi
+import axios from "../api/axios";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
+  // Inisialisasi state LANGSUNG dari localStorage agar tidak null saat refresh
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user_data");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
-  // Cek login saat refresh halaman
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user_data");
-    const storedToken = localStorage.getItem("token");
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("token") || null;
+  });
 
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
-    }
-  }, []);
+  const [loading, setLoading] = useState(false); // Tambah loading state jika perlu
 
+  // Register
   const register = async (fullName, email, password, role) => {
-    // Hapus parameter ke-5
     try {
       const response = await axios.post("/auth/register", {
         full_name: fullName,
         email: email,
         password: password,
         role: role,
-        // institution_name dihapus
       });
       return response.data;
     } catch (error) {
       throw error.response ? error.response.data : new Error("Network Error");
     }
   };
-  // 2. FUNGSI LOGIN (Menghubungkan ke Backend)
+
+  // Login
   const login = async (email, password) => {
     try {
       const response = await axios.post("/auth/login", {
@@ -41,10 +39,9 @@ export const AuthProvider = ({ children }) => {
         password: password,
       });
 
-      // Asumsi backend mengembalikan { user: {...}, token: "..." }
       const { user, token } = response.data;
 
-      // Simpan data
+      // Simpan ke State & Storage
       setUser(user);
       setToken(token);
       localStorage.setItem("user_data", JSON.stringify(user));
@@ -57,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 3. FUNGSI LOGOUT
+  // Logout
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -66,7 +63,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, token, login, register, logout, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
