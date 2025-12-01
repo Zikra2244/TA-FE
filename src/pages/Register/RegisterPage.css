@@ -353,3 +353,42 @@
     transform: translateY(0);
   }
 }
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Pastikan input di dalam wrapper tetap full width */
+.password-wrapper input {
+  width: 100%;
+  padding-right: 45px; /* Beri ruang di kanan agar teks tidak menabrak ikon */
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #64748b; /* Warna ikon default (abu-abu) */
+  transition: color 0.3s;
+  padding: 0;
+  margin: 0;
+}
+
+.password-toggle-btn:hover {
+  color: #00bfff; /* Warna ikon saat hover (Cyan) */
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+}

@@ -90,13 +90,32 @@
 
 .user-role-badge {
   font-size: 0.7rem;
-  background: rgba(255, 255, 255, 0.1);
   padding: 2px 8px;
   border-radius: 4px;
-  color: #94a3b8;
   margin-top: 2px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
+/* Warna khusus per Role */
+.user-role-badge.admin {
+  background: rgba(239, 68, 68, 0.2); /* Merah Transparan */
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.user-role-badge.issuer {
+  background: rgba(59, 130, 246, 0.2); /* Biru Transparan */
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.user-role-badge.owner {
+  background: rgba(16, 185, 129, 0.2); /* Hijau Transparan */
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
 /* Connect Wallet Button */
 .nav-btn-connect {
   background: transparent;

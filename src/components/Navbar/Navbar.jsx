@@ -16,22 +16,32 @@ const Navbar = () => {
     navigate("/");
   };
 
-  // Helper untuk memendekkan alamat wallet (0x1234...5678)
   const shortenAddress = (address) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  // --- PERBAIKAN: Fungsi Penerjemah Role ---
+  const getRoleLabel = (role) => {
+    switch (role) {
+      case "admin":
+        return "Admin Institusi";
+      case "issuer":
+        return "Penerbit";
+      case "owner":
+        return "Mahasiswa";
+      default:
+        return "User";
+    }
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        {/* LOGO */}
         <Link to="/" className="navbar-logo">
           <span>🎓 VeriChain</span>
         </Link>
 
-        {/* MENU UTAMA (Desktop) */}
         <div className="navbar-menu">
-          {/* KONDISI 1: Belum Login (GUEST) */}
           {!user ? (
             <div className="nav-actions">
               <Link to="/login" className="nav-link">
@@ -42,19 +52,19 @@ const Navbar = () => {
               </Link>
             </div>
           ) : (
-            /* KONDISI 2: Sudah Login (USER) */
             <div className="nav-actions logged-in">
-              {/* Info User Web2 */}
+              {/* Info User */}
               <div className="user-profile">
                 <span className="user-name">
                   Halo, {user.fullName || "User"}
                 </span>
-                <span className="user-role-badge">
-                  {user.role === "issuer" ? "Penerbit" : "Mahasiswa"}
+                {/* Panggil fungsi getRoleLabel di sini */}
+                <span className={`user-role-badge ${user.role}`}>
+                  {getRoleLabel(user.role)}
                 </span>
               </div>
 
-              {/* Tombol Web3 / Wallet */}
+              {/* Tombol Web3 */}
               {!currentAccount ? (
                 <button onClick={connectWallet} className="nav-btn-connect">
                   🔗 Hubungkan Wallet

@@ -7,8 +7,11 @@ const RegisterPage = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // State baru
   const [role, setRole] = useState("Pemilik Dokumen");
-  // HAPUS state institutionName
+  const [institutionName, setInstitutionName] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false); // State untuk toggle mata
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -20,11 +23,23 @@ const RegisterPage = () => {
     setError(null);
     setLoading(true);
 
+    // 1. Validasi Password Cocok
+    if (password !== confirmPassword) {
+      setError("Kata sandi dan konfirmasi tidak cocok.");
+      setLoading(false);
+      return;
+    }
+
+    // 2. Validasi Panjang Password (Opsional tapi disarankan)
+    if (password.length < 8) {
+      setError("Kata sandi minimal 8 karakter.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const backendRole = role === "Pemilik Dokumen" ? "owner" : "issuer";
-
-      // Kita tidak lagi mengirim institutionName
-      await register(fullName, email, password, backendRole);
+      await register(fullName, email, password, backendRole, institutionName);
 
       if (backendRole === "issuer") {
         alert(
@@ -85,29 +100,74 @@ const RegisterPage = () => {
                     : "email@pribadi.com"
                 }
               />
-              {role === "Penerbit" && (
-                <small
-                  style={{
-                    color: "#94A3B8",
-                    fontSize: "0.8rem",
-                    marginTop: "5px",
-                    display: "block",
-                  }}
-                >
-                  *Wajib menggunakan email resmi institusi.
-                </small>
-              )}
             </div>
 
+            {/* PASSWORD FIELD */}
             <div className="input-group">
               <label>Kata Sandi</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="Minimal 8 karakter"
-              />
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Minimal 8 karakter"
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    /* Icon Mata Terbuka (SVG) */
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  ) : (
+                    /* Icon Mata Tertutup (SVG) */
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* CONFIRM PASSWORD FIELD */}
+            <div className="input-group">
+              <label>Konfirmasi Kata Sandi</label>
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  placeholder="Ulangi kata sandi"
+                />
+                {/* Kita gunakan toggle yang sama untuk kedua field agar sinkron */}
+              </div>
             </div>
 
             <div className="input-group">
@@ -115,12 +175,10 @@ const RegisterPage = () => {
               <div className="select-wrapper">
                 <select value={role} onChange={(e) => setRole(e.target.value)}>
                   <option value="Pemilik Dokumen">Pemilik Dokumen</option>
-                  <option value="Penerbit">Penerbit </option>
+                  <option value="Penerbit">Penerbit</option>
                 </select>
               </div>
             </div>
-
-            {/* Input Nama Institusi DIHAPUS karena otomatis by domain */}
 
             <button type="submit" className="btn-submit" disabled={loading}>
               {loading ? <span className="loader"></span> : "Daftar Sekarang"}
