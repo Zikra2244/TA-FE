@@ -2,14 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import { AuthContext } from "../../context/AuthContext";
-import axios from "../../api/axios"; // Pastikan path axios instance Anda benar
-import "./IssuerStyles.css";
+import axios from "../../api/axios"; 
+// import "./IssuerStyles.css";
 
 const IssuerDashboard = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // 1. State untuk menyimpan data dari Database
+  // 1. State Data
   const [stats, setStats] = useState({
     totalIssued: 0,
     totalPending: 0,
@@ -18,17 +18,16 @@ const IssuerDashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Proteksi Halaman: Hanya untuk Issuer
+  // Proteksi Halaman
   useEffect(() => {
     if (user && user.role !== "issuer") {
       navigate("/");
     }
   }, [user, navigate]);
 
-  // 2. Fetch Data Dashboard dari Backend
+  // 2. Fetch Data dari Backend
   useEffect(() => {
     const fetchDashboardData = async () => {
-      // Jangan fetch jika user belum ter-load atau bukan issuer
       if (!user || user.role !== "issuer") return;
 
       try {
@@ -37,7 +36,6 @@ const IssuerDashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        // Simpan ke state
         setStats(response.data.stats);
         setHistory(response.data.recentHistory);
       } catch (err) {
@@ -52,22 +50,25 @@ const IssuerDashboard = () => {
 
   if (!user) return null;
 
-  // Cek Status Akun
   const isPending = user.status === "pending_approval";
 
   return (
-    <div className="issuer-dashboard">
+    <div className="issuer-dashboard min-h-screen bg-[#0B1120] text-white">
       <Navbar />
 
-      <main className="issuer-content">
+      <main className="issuer-content p-6">
         {/* HEADER AREA */}
-        <div className="dashboard-header">
+        <div className="dashboard-header flex justify-between items-center mb-8">
           <div className="header-title">
-            <h1>Dashboard Penerbit</h1>
-            <p>
+            <h1 className="text-2xl font-bold">Dashboard Penerbit</h1>
+            <p className="text-gray-400 mt-1">
               {user.fullName || user.username} •{" "}
               <span
-                className={`status-label ${isPending ? "pending" : "verified"}`}
+                className={`ml-2 px-2 py-0.5 text-xs rounded border ${
+                  isPending 
+                    ? "text-yellow-400 border-yellow-400/30 bg-yellow-400/10" 
+                    : "text-green-400 border-green-400/30 bg-green-400/10"
+                }`}
               >
                 {isPending ? "Menunggu Persetujuan" : "Akun Terverifikasi"}
               </span>
@@ -76,7 +77,11 @@ const IssuerDashboard = () => {
 
           <div className="header-actions">
             <button
-              className="btn-create-new"
+              className={`px-4 py-2 rounded font-medium transition-colors ${
+                isPending 
+                  ? "bg-gray-700 text-gray-400 cursor-not-allowed" 
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}
               disabled={isPending}
               onClick={() => navigate("/issuer/issue")}
             >
@@ -87,9 +92,9 @@ const IssuerDashboard = () => {
 
         {/* ALERT JIKA PENDING */}
         {isPending && (
-          <div className="status-banner">
-            <span>⚠️</span>
-            <span>
+          <div className="status-banner mb-6 p-4 bg-yellow-900/20 border border-yellow-500/30 rounded flex items-center gap-3 text-yellow-200">
+            <span className="text-xl">⚠️</span>
+            <span className="text-sm">
               <strong>Akun Anda sedang ditinjau oleh Admin Institusi.</strong>
               <br />
               Anda belum dapat menerbitkan ijazah sampai akun disetujui.
@@ -97,66 +102,58 @@ const IssuerDashboard = () => {
           </div>
         )}
 
-        {/* STATS AREA (DINAMIS) */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3>Total Diterbitkan</h3>
-            <div className="value">{loading ? "..." : stats.totalIssued}</div>
+        {/* STATS AREA */}
+        <div className="stats-grid grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="stat-card bg-[#1E293B] p-5 rounded-lg border border-gray-700">
+            <h3 className="text-gray-400 text-sm font-medium">Total Diterbitkan</h3>
+            <div className="value text-2xl font-bold mt-2">{loading ? "..." : stats.totalIssued}</div>
           </div>
-          <div className="stat-card">
-            <h3>Menunggu Klaim</h3>
-            <div className="value">{loading ? "..." : stats.totalPending}</div>
+          <div className="stat-card bg-[#1E293B] p-5 rounded-lg border border-gray-700">
+            <h3 className="text-gray-400 text-sm font-medium">Menunggu Klaim</h3>
+            <div className="value text-2xl font-bold mt-2 text-yellow-400">{loading ? "..." : stats.totalPending}</div>
           </div>
-          <div className="stat-card">
-            <h3>Sudah Diklaim</h3>
-            <div className="value">{loading ? "..." : stats.totalClaimed}</div>
+          <div className="stat-card bg-[#1E293B] p-5 rounded-lg border border-gray-700">
+            <h3 className="text-gray-400 text-sm font-medium">Sudah Diklaim</h3>
+            <div className="value text-2xl font-bold mt-2 text-green-400">{loading ? "..." : stats.totalClaimed}</div>
           </div>
         </div>
 
-        {/* TABEL RIWAYAT (DINAMIS) */}
+        {/* TABEL RIWAYAT (Fixed Structure) */}
         <section className="history-section">
           <h2>Riwayat Penerbitan Terakhir</h2>
 
           {loading ? (
             <div className="empty-state">Memuat data...</div>
           ) : history.length === 0 ? (
-            <div className="empty-state">
-              Belum ada ijazah yang diterbitkan.
-            </div>
+            <div className="empty-state">Belum ada ijazah yang diterbitkan.</div>
           ) : (
-            <div className="table-container">
-              <table className="history-table">
+            <div className="table-wrapper">
+              <table className="modern-table">
                 <thead>
                   <tr>
-                    <th>Penerima</th>
-                    <th>Jenis Dokumen</th>
-                    <th>Tanggal Terbit</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
+                    <th style={{ width: "25%" }}>Penerima</th>
+                    <th style={{ width: "25%" }}>Jenis Dokumen</th>
+                    <th style={{ width: "20%" }}>Tanggal</th>
+                    <th style={{ width: "15%" }}>Status</th>
+                    <th style={{ width: "15%", textAlign: "right" }}>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   {history.map((item, index) => (
                     <tr key={index}>
                       <td>
-                        <strong>{item.recipient_name}</strong>
+                        <span className="truncate" title={item.recipient_name}>
+                          {item.recipient_name}
+                        </span>
                       </td>
                       <td>{item.document_type}</td>
+                      <td>{new Date(item.issue_date).toLocaleDateString("id-ID")}</td>
                       <td>
-                        {new Date(item.issue_date).toLocaleDateString("id-ID")}
-                      </td>
-                      <td>
-                        <span
-                          className={`badge ${
-                            item.status === "claimed"
-                              ? "badge-success"
-                              : "badge-warning"
-                          }`}
-                        >
+                        <span className={`status-badge ${item.status === 'claimed' ? 'claimed' : 'issued'}`}>
                           {item.status === "claimed" ? "Diklaim" : "Menunggu"}
                         </span>
                       </td>
-                      <td>
+                      <td style={{ textAlign: "right" }}>
                         <a
                           href={`https://sepolia.etherscan.io/tx/${item.tx_hash}`}
                           target="_blank"

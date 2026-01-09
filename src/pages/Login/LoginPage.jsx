@@ -20,11 +20,20 @@ const LoginPage = () => {
     try {
       const userData = await login(email, password);
       console.log("Login Berhasil:", userData);
-      if (userData.role === "issuer") {
+
+      // SAFETY CHECK: Pastikan userData valid sebelum cek role
+      if (!userData || !userData.role) {
+        throw new Error("Gagal mendapatkan data user.");
+      }
+
+      // Normalisasi string role (jaga-jaga jika backend kirim huruf besar/kecil)
+      const role = userData.role.toLowerCase();
+
+      if (role === "issuer") {
         navigate("/issuer/dashboard");
-      } else if (userData.role === "owner") {
-        navigate("/dashboard");
-      } else if (userData.role === "admin") {
+      } else if (role === "owner" || role === "holder") { // Handle kedua kemungkinan
+        navigate("/holder/dashboard");
+      } else if (role === "admin") {
         navigate("/admin/dashboard");
       } else {
         navigate("/");
@@ -36,7 +45,7 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
-
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="login-page">
       <Link to="/" className="back-link">
@@ -72,14 +81,30 @@ const LoginPage = () => {
 
             <div className="input-group">
               <label htmlFor="password">Kata Sandi</label>
-              <input
-                type="password"
-                id="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="password-input-wrapper" style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? "text" : "password"} // Toggle type
+                  id="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  style={{ width: '100%', paddingRight: '40px' }} // Kasih ruang untuk icon
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    cursor: 'pointer',
+                    fontSize: '1.2rem'
+                  }}
+                >
+                  {showPassword ? "👁️" : "🙈"}
+                </span>
+              </div>
             </div>
 
             <button type="submit" className="btn-submit" disabled={loading}>

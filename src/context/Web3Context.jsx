@@ -1,53 +1,51 @@
 import React, { createContext, useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-// 1. IMPORT PETA DAN ALAMAT KONTRAK
+// Pastikan file config ini sudah ada dan benar path-nya
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contracts/config";
 
 export const Web3Context = createContext();
 
 const { ethereum } = window;
 
-// --- Fungsi Helper untuk membuat instansi kontrak ---
-const getEthereumContract = () => {
-  // Pengecekan provider baru yang lebih modern
-  const provider = new ethers.BrowserProvider(ethereum);
-
-  // Signer adalah objek yang mewakili akun pengguna (Account #0 Anda)
-  // Kita butuh signer untuk mengirim transaksi (write)
-  const signer = provider.getSigner();
-
-  // Ini adalah objek kontrak yang siap diajak bicara
-  const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-
-  // Kita kembalikan versi yang terhubung dengan Signer (untuk write)
-  // dan versi yang hanya terhubung ke Provider (untuk read-only)
-  // (Meskipun untuk saat ini kita pakai signer untuk semua)
-  return contract;
-};
-// ---------------------------------------------------
-
 export const Web3Provider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  // 2. STATE BARU UNTUK MENYIMPAN OBJEK KONTRAK
   const [academicNftContract, setAcademicNftContract] = useState(null);
+
+  // --- 1. PERBAIKAN: Fungsi Helper dibuat ASYNC ---
+  // Di Ethers v6, provider.getSigner() itu async, jadi harus pakai await
+  const getEthereumContract = async () => {
+    if (!ethereum) return null;
+
+    try {
+      const provider = new ethers.BrowserProvider(ethereum);
+      // PERBAIKAN UTAMA DI SINI: tambahkan 'await'
+      const signer = await provider.getSigner(); 
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+      
+      console.log("Kontrak berhasil dimuat:", contract);
+      return contract;
+    } catch (error) {
+      console.error("Gagal load contract:", error);
+      return null;
+    }
+  };
 
   const checkIfWalletIsConnected = async () => {
     try {
-      if (!ethereum) return alert("Mohon install Metamask!");
+      if (!ethereum) return; // Jangan alert di sini agar tidak mengganggu UX saat load pertama
 
       const accounts = await ethereum.request({ method: "eth_accounts" });
 
       if (accounts.length > 0) {
         setCurrentAccount(accounts[0]);
 
-        // 3. JIKA SUDAH TERHUBUNG, LANGSUNG BUAT OBJEK KONTRAK
+        // Load contract jika akun terdeteksi
         const contract = await getEthereumContract();
         setAcademicNftContract(contract);
       } else {
-        console.log("Tidak ada akun yang ditemukan");
+        console.log("Tidak ada akun yang terhubung");
       }
     } catch (error) {
       console.error(error);
@@ -59,22 +57,44 @@ export const Web3Provider = ({ children }) => {
       if (!ethereum) return alert("Mohon install Metamask!");
 
       setIsLoading(true);
+      
+      // Request akses akun
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
+      
       setCurrentAccount(accounts[0]);
 
-      // 4. SETELAH KONEK, LANGSUNG BUAT OBJEK KONTRAK
+      // Setelah connect, langsung load contract
       const contract = await getEthereumContract();
       setAcademicNftContract(contract);
+      
+      // Opsional: Reload halaman agar state bersih (tergantung preferensi)
+      // window.location.reload(); 
 
-      setIsLoading(false);
     } catch (error) {
       console.error(error);
-      setIsLoading(false);
       throw new Error("Gagal menghubungkan wallet");
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  // Event Listener: Deteksi jika user ganti akun di MetaMask
+  useEffect(() => {
+    if (ethereum) {
+      ethereum.on("accountsChanged", async (accounts) => {
+        if (accounts.length > 0) {
+          setCurrentAccount(accounts[0]);
+          const contract = await getEthereumContract();
+          setAcademicNftContract(contract);
+        } else {
+          setCurrentAccount(null);
+          setAcademicNftContract(null);
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -86,7 +106,7 @@ export const Web3Provider = ({ children }) => {
         connectWallet,
         currentAccount,
         isLoading,
-        academicNftContract, // 5. BAGIKAN KONTRAK KE SELURUH APLIKASI
+        academicNftContract,
       }}
     >
       {children}
