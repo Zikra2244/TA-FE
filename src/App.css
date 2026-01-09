@@ -1,12 +1,8 @@
-/* src/index.css */
-
-/* 1. RESET GLOBAL & WARNA DASAR (Solusi Masalah Area Putih) */
 body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  /* Memaksa background browser jadi Biru Gelap */
   background-color: #02040a;
   color: #ffffff;
   overflow-x: hidden;
@@ -16,11 +12,9 @@ body {
 #root {
   width: 100%;
   min-height: 100vh;
-  /* Pastikan root juga background gelap */
   background-color: #02040a;
 }
 
-/* 2. Scrollbar Keren (Opsional) */
 ::-webkit-scrollbar {
   width: 10px;
 }

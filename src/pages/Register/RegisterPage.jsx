@@ -7,11 +7,11 @@ const RegisterPage = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // State baru
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("Pemilik Dokumen");
   const [institutionName, setInstitutionName] = useState("");
 
-  const [showPassword, setShowPassword] = useState(false); // State untuk toggle mata
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -23,14 +23,12 @@ const RegisterPage = () => {
     setError(null);
     setLoading(true);
 
-    // 1. Validasi Password Cocok
     if (password !== confirmPassword) {
       setError("Kata sandi dan konfirmasi tidak cocok.");
       setLoading(false);
       return;
     }
 
-    // 2. Validasi Panjang Password (Opsional tapi disarankan)
     if (password.length < 8) {
       setError("Kata sandi minimal 8 karakter.");
       setLoading(false);
@@ -102,7 +100,6 @@ const RegisterPage = () => {
               />
             </div>
 
-            {/* PASSWORD FIELD */}
             <div className="input-group">
               <label>Kata Sandi</label>
               <div className="password-wrapper">
@@ -119,7 +116,6 @@ const RegisterPage = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    /* Icon Mata Terbuka (SVG) */
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -135,7 +131,6 @@ const RegisterPage = () => {
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
                   ) : (
-                    /* Icon Mata Tertutup (SVG) */
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -155,7 +150,6 @@ const RegisterPage = () => {
               </div>
             </div>
 
-            {/* CONFIRM PASSWORD FIELD */}
             <div className="input-group">
               <label>Konfirmasi Kata Sandi</label>
               <div className="password-wrapper">
@@ -166,7 +160,6 @@ const RegisterPage = () => {
                   required
                   placeholder="Ulangi kata sandi"
                 />
-                {/* Kita gunakan toggle yang sama untuk kedua field agar sinkron */}
               </div>
             </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"; // <--- Tambahkan useContext di sini
+import React, { useState, useContext } from "react";
 import "./LoginPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -9,7 +9,6 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Mengambil fungsi login dari AuthContext
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -19,15 +18,19 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      // Panggil fungsi login asli dari Context
-      await login(email, password);
-
-      // Jika sukses, arahkan ke Home/Dashboard
-      console.log("Login Berhasil!");
-      navigate("/");
+      const userData = await login(email, password);
+      console.log("Login Berhasil:", userData);
+      if (userData.role === "issuer") {
+        navigate("/issuer/dashboard");
+      } else if (userData.role === "owner") {
+        navigate("/dashboard");
+      } else if (userData.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       console.error(err);
-      // Tampilkan pesan error dari backend jika ada, atau pesan default
       setError(err.message || "Email atau kata sandi salah.");
     } finally {
       setLoading(false);

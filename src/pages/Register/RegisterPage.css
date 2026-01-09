@@ -1,10 +1,7 @@
-/* ==================================== */
-/* 1. CONTAINER FULL SCREEN (FIXED)     */
-/* ==================================== */
 .register-page {
   width: 100vw;
   height: 100vh;
-  background-color: #02040a; /* Darkest Navy */
+  background-color: #02040a;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,7 +9,6 @@
   overflow: hidden;
 }
 
-/* Background Animation (Sama dengan Login) */
 .register-page::before {
   content: "";
   position: absolute;
@@ -45,7 +41,6 @@
   z-index: 0;
 }
 
-/* Tombol Kembali */
 .back-link {
   position: absolute;
   top: 2rem;
@@ -64,9 +59,6 @@
   color: #00bfff;
 }
 
-/* ==================================== */
-/* 2. REGISTER CARD (GLASSMORPHISM)     */
-/* ==================================== */
 .register-container {
   position: relative;
   z-index: 5;
@@ -90,12 +82,10 @@
   overflow: hidden;
   animation: floatUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  /* Agar bisa discroll jika layar HP pendek */
   max-height: 90vh;
   overflow-y: auto;
 }
 
-/* Sembunyikan Scrollbar default pada card */
 .register-card::-webkit-scrollbar {
   width: 6px;
 }
@@ -121,7 +111,6 @@
   pointer-events: none;
 }
 
-/* Typography */
 .form-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -153,9 +142,6 @@
   font-family: "Inter", sans-serif;
 }
 
-/* ==================================== */
-/* 3. INPUTS & FORM (CONSISTENT)        */
-/* ==================================== */
 .register-form {
   width: 100%;
 }
@@ -174,7 +160,6 @@
   font-family: "Inter", sans-serif;
 }
 
-/* Style Input & Select */
 .input-group input,
 .input-group select {
   width: 100%;
@@ -201,9 +186,8 @@
   box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.15);
 }
 
-/* CUSTOM DROPDOWN STYLING (Agar option tidak putih) */
 .input-group select {
-  appearance: none; /* Hilangkan panah default browser */
+  appearance: none;
   cursor: pointer;
 }
 .select-wrapper {
@@ -219,14 +203,13 @@
   transform: translateY(-50%);
   pointer-events: none;
 }
-/* Style untuk Option didalam Dropdown */
+
 .input-group select option {
-  background-color: #02040a; /* Warna Background Gelap */
+  background-color: #02040a;
   color: white;
   padding: 10px;
 }
 
-/* FIX AUTOFILL BACKGROUND */
 .input-group input:-webkit-autofill,
 .input-group input:-webkit-autofill:hover,
 .input-group input:-webkit-autofill:focus,
@@ -236,7 +219,6 @@
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Submit Button */
 .btn-submit {
   width: 100%;
   padding: 1rem;
@@ -265,7 +247,6 @@
   color: #94a3b8;
 }
 
-/* Footer & Error */
 .form-footer {
   margin-top: 2rem;
   text-align: center;
@@ -294,12 +275,10 @@
   text-align: center;
 }
 
-/* Animasi Fade In (Untuk Input Institusi) */
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out;
 }
 
-/* Loader */
 .loader {
   width: 20px;
   height: 20px;
@@ -310,7 +289,6 @@
   display: inline-block;
 }
 
-/* Animations */
 @keyframes gridMove {
   0% {
     transform: perspective(500px) rotateX(60deg) translateY(0);
@@ -359,10 +337,9 @@
   width: 100%;
 }
 
-/* Pastikan input di dalam wrapper tetap full width */
 .password-wrapper input {
   width: 100%;
-  padding-right: 45px; /* Beri ruang di kanan agar teks tidak menabrak ikon */
+  padding-right: 45px;
 }
 
 .password-toggle-btn {
@@ -379,14 +356,14 @@
   align-items: center;
   justify-content: center;
 
-  color: #64748b; /* Warna ikon default (abu-abu) */
+  color: #64748b;
   transition: color 0.3s;
   padding: 0;
   margin: 0;
 }
 
 .password-toggle-btn:hover {
-  color: #00bfff; /* Warna ikon saat hover (Cyan) */
+  color: #00bfff;
 }
 
 .password-toggle-btn:focus {

@@ -1,10 +1,7 @@
-/* ==================================== */
-/* 1. CONTAINER FULL SCREEN (FIXED)     */
-/* ==================================== */
 .login-page {
   width: 100vw;
   height: 100vh;
-  background-color: #02040a; /* Darkest Navy */
+  background-color: #02040a;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,7 +9,6 @@
   overflow: hidden;
 }
 
-/* Background Animation */
 .login-page::before {
   content: "";
   position: absolute;
@@ -45,7 +41,6 @@
   z-index: 0;
 }
 
-/* Tombol Kembali */
 .back-link {
   position: absolute;
   top: 2rem;
@@ -64,9 +59,6 @@
   color: #00bfff;
 }
 
-/* ==================================== */
-/* 2. LOGIN CARD (GLASSMORPHISM)        */
-/* ==================================== */
 .login-container {
   position: relative;
   z-index: 5;
@@ -79,7 +71,6 @@
 .login-card {
   width: 100%;
   max-width: 420px;
-  /* Background semi-transparan gelap */
   background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -141,9 +132,6 @@
   font-family: "Inter", sans-serif;
 }
 
-/* ==================================== */
-/* 3. INPUTS & FORM (THE FIX)           */
-/* ==================================== */
 .login-form {
   width: 100%;
 }
@@ -162,20 +150,18 @@
   font-family: "Inter", sans-serif;
 }
 
-/* Style Input Utama */
 .input-group input {
   width: 100%;
   padding: 0.9rem 1rem;
-  /* Warna Background GELAP */
   background-color: rgba(30, 41, 59, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  color: #ffffff; /* Teks Putih */
+  color: #ffffff;
   font-size: 1rem;
   font-family: "Inter", sans-serif;
   transition: all 0.3s;
   outline: none;
-  box-sizing: border-box; /* Agar padding tidak menambah lebar */
+  box-sizing: border-box;
 }
 
 .input-group input::placeholder {
@@ -188,7 +174,6 @@
   box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.15);
 }
 
-/* FIX AUTOFILL BACKGROUND (Masalah kotak putih browser) */
 .input-group input:-webkit-autofill,
 .input-group input:-webkit-autofill:hover,
 .input-group input:-webkit-autofill:focus,
@@ -198,7 +183,6 @@
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Submit Button */
 .btn-submit {
   width: 100%;
   padding: 1rem;
@@ -227,7 +211,6 @@
   color: #94a3b8;
 }
 
-/* Footer & Error */
 .form-footer {
   margin-top: 2rem;
   text-align: center;
@@ -256,7 +239,6 @@
   text-align: center;
 }
 
-/* Loader */
 .loader {
   width: 20px;
   height: 20px;
@@ -267,7 +249,6 @@
   display: inline-block;
 }
 
-/* Animations */
 @keyframes gridMove {
   0% {
     transform: perspective(500px) rotateX(60deg) translateY(0);

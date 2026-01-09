@@ -1,12 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import "./LandingPage.css";
 import Navbar from "../../components/Navbar/Navbar";
 import PublicFooter from "../../components/PublicFooter/PublicFooter";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const LandingPage = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const cardRef = useRef(null);
+
+  const { user } = useContext(AuthContext);
+
+  const getDashboardPath = (role) => {
+    switch (role) {
+      case "admin":
+        return "/admin/dashboard";
+      case "issuer":
+        return "/issuer/dashboard";
+      case "owner":
+        return "/dashboard";
+      default:
+        return "/login";
+    }
+  };
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -69,9 +85,19 @@ const LandingPage = () => {
               <Link to="/verify" className="btn-primary-glow">
                 Mulai Verifikasi
               </Link>
-              <Link to="/login" className="btn-secondary-glass">
-                Masuk Platform
-              </Link>
+
+              {user ? (
+                <Link
+                  to={getDashboardPath(user.role)}
+                  className="btn-secondary-glass"
+                >
+                  Ke Dashboard
+                </Link>
+              ) : (
+                <Link to="/login" className="btn-secondary-glass">
+                  Masuk Platform
+                </Link>
+              )}
             </div>
           </div>
 
@@ -97,7 +123,6 @@ const LandingPage = () => {
                     </div>
                   </div>
 
-                  {/* Footer Kartu (Hash) */}
                   <div className="card-footer">
                     <div className="hash-code">0x71C...9A21</div>
                     <div className="status-indicator">VALID</div>
@@ -108,7 +133,6 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Indikator Scroll di Bawah */}
         <div className="scroll-indicator">
           <div className="mouse">
             <div className="wheel"></div>
@@ -123,9 +147,8 @@ const LandingPage = () => {
           </h2>
 
           <div className="features-grid">
-            {/* Kartu Fitur 1 */}
             <div className="feature-box">
-              <div className="feature-glow"></div> {/* Efek hover glow */}
+              <div className="feature-glow"></div>
               <div className="icon-box">🔒</div>
               <h3>Imutabilitas Total</h3>
               <p>
@@ -134,7 +157,6 @@ const LandingPage = () => {
               </p>
             </div>
 
-            {/* Kartu Fitur 2 */}
             <div className="feature-box">
               <div className="feature-glow"></div>
               <div className="icon-box">💎</div>
@@ -145,7 +167,6 @@ const LandingPage = () => {
               </p>
             </div>
 
-            {/* Kartu Fitur 3 */}
             <div className="feature-box">
               <div className="feature-glow"></div>
               <div className="icon-box">⚡</div>
@@ -159,7 +180,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* --- HOW IT WORKS SECTION --- */}
       <section className="how-it-works-section">
         <h2 className="section-title">Cara Kerja Sistem</h2>
         <div className="steps-container">
@@ -192,7 +212,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Footer akan otomatis berada di bawah */}
       <PublicFooter />
     </div>
   );

@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
   // Login
   const login = async (email, password) => {
     try {
+      setLoading(true);
       const response = await axios.post("/auth/login", {
         email: email,
         password: password,
@@ -41,16 +42,20 @@ export const AuthProvider = ({ children }) => {
 
       const { user, token } = response.data;
 
-      // Simpan ke State & Storage
+      // Simpan ke State
       setUser(user);
       setToken(token);
+
+      // Simpan ke LocalStorage
       localStorage.setItem("user_data", JSON.stringify(user));
       localStorage.setItem("token", token);
 
-      return true;
+      return user; // <--- UBAH INI: Mengembalikan objek user (agar role bisa dibaca)
     } catch (error) {
       console.error("Login Gagal:", error);
       throw error.response ? error.response.data : new Error("Login Failed");
+    } finally {
+      setLoading(false);
     }
   };
 
