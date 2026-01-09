@@ -21,9 +21,13 @@ export const Web3Provider = ({ children }) => {
     try {
       const provider = new ethers.BrowserProvider(ethereum);
       // PERBAIKAN UTAMA DI SINI: tambahkan 'await'
-      const signer = await provider.getSigner(); 
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-      
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(
+        CONTRACT_ADDRESS,
+        CONTRACT_ABI,
+        signer
+      );
+
       console.log("Kontrak berhasil dimuat:", contract);
       return contract;
     } catch (error) {
@@ -57,27 +61,32 @@ export const Web3Provider = ({ children }) => {
       if (!ethereum) return alert("Mohon install Metamask!");
 
       setIsLoading(true);
-      
+
       // Request akses akun
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
-      
+
       setCurrentAccount(accounts[0]);
 
       // Setelah connect, langsung load contract
       const contract = await getEthereumContract();
       setAcademicNftContract(contract);
-      
-      // Opsional: Reload halaman agar state bersih (tergantung preferensi)
-      // window.location.reload(); 
 
+      // Opsional: Reload halaman agar state bersih (tergantung preferensi)
+      // window.location.reload();
     } catch (error) {
       console.error(error);
       throw new Error("Gagal menghubungkan wallet");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const disconnectWallet = () => {
+    setCurrentAccount(null);
+    setAcademicNftContract(null);
+    console.log("Wallet disconnected from App state");
   };
 
   // Event Listener: Deteksi jika user ganti akun di MetaMask
@@ -107,6 +116,7 @@ export const Web3Provider = ({ children }) => {
         currentAccount,
         isLoading,
         academicNftContract,
+        disconnectWallet,
       }}
     >
       {children}

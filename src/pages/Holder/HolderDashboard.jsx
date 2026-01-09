@@ -1,10 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar/Navbar"; 
+import Navbar from "../../components/Navbar/Navbar";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "../../api/axios";
 import "./HolderStyles.css"; // Style yang disatukan
-import { Wallet, FileText, CheckCircle, ExternalLink, Download, PlusCircle } from "lucide-react";
+import {
+  Wallet,
+  FileText,
+  CheckCircle,
+  ExternalLink,
+  Download,
+  PlusCircle,
+} from "lucide-react";
 
 const HolderDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -13,12 +20,12 @@ const HolderDashboard = () => {
   // State
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [walletAddress, setWalletAddress] = useState(""); 
+  const [walletAddress, setWalletAddress] = useState("");
 
   // Proteksi Halaman
   useEffect(() => {
-    if (user && user.role !== "student") { 
-      // navigate("/"); 
+    if (user && user.role !== "student") {
+      // navigate("/");
     }
   }, [user, navigate]);
 
@@ -43,7 +50,7 @@ const HolderDashboard = () => {
             issue_date: "2026-01-05",
             tx_hash: "0x123abc...",
             token_id: "105",
-            file_url: "#"
+            file_url: "#",
           },
           {
             id: 2,
@@ -52,8 +59,8 @@ const HolderDashboard = () => {
             issue_date: "2025-12-20",
             tx_hash: "0x456def...",
             token_id: "99",
-            file_url: "#"
-          }
+            file_url: "#",
+          },
         ]);
       } finally {
         setLoading(false);
@@ -65,7 +72,7 @@ const HolderDashboard = () => {
 
   // Simulasi Connect Wallet
   const connectWallet = () => {
-    setWalletAddress("0x71C...9A21"); 
+    setWalletAddress("0x71C...9A21");
   };
 
   if (!user) return null;
@@ -75,15 +82,14 @@ const HolderDashboard = () => {
       <Navbar />
 
       <main className="holder-container">
-        
         {/* 1. HEADER AREA */}
         <header className="dashboard-header">
           <div className="header-title">
             <h1>Dompet Digital Akademik</h1>
-            <p>Selamat datang, <strong>{user.fullName || user.username}</strong></p>
+            <p>
+              Selamat datang, <strong>{user.fullName || user.username}</strong>
+            </p>
           </div>
-
-          
         </header>
 
         {/* 2. ACTION BANNER (TOMBOL KE HALAMAN CLAIM) */}
@@ -92,38 +98,102 @@ const HolderDashboard = () => {
           <div className="banner-content">
             <h2>Belum punya Ijazah Digital di Wallet?</h2>
             <p>
-              Ajukan klaim tokenisasi ijazah Anda sekarang untuk mendapatkan sertifikat digital yang terverifikasi di blockchain.
+              Ajukan klaim tokenisasi ijazah Anda sekarang untuk mendapatkan
+              sertifikat digital yang terverifikasi di blockchain.
             </p>
           </div>
           {/* Pastikan route '/holder/claim' sudah didaftarkan di App.js */}
           <button
-            onClick={() => navigate('/holder/claim')} 
+            onClick={() => navigate("/holder/claim")}
             className="btn btn-white"
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
           >
             <PlusCircle size={18} /> Ajukan Klaim Baru
           </button>
         </div>
 
         {/* 3. STATS AREA */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
-          <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.5rem' }}>
-            <div style={{ background: '#eff6ff', padding: '0.75rem', borderRadius: '50%', color: 'var(--primary-color)' }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: "1.5rem",
+            marginBottom: "2.5rem",
+          }}
+        >
+          <div
+            className="card"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              padding: "1.5rem",
+            }}
+          >
+            <div
+              style={{
+                background: "#eff6ff",
+                padding: "0.75rem",
+                borderRadius: "50%",
+                color: "var(--primary-color)",
+              }}
+            >
               <FileText size={24} />
             </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-muted)' }}>Total Dokumen</h3>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{documents.length}</div>
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: "0.875rem",
+                  color: "var(--text-muted)",
+                }}
+              >
+                Total Dokumen
+              </h3>
+              <div style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+                {documents.length}
+              </div>
             </div>
           </div>
-          
-          <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.5rem' }}>
-            <div style={{ background: '#ecfdf5', padding: '0.75rem', borderRadius: '50%', color: '#059669' }}>
+
+          <div
+            className="card"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              padding: "1.5rem",
+            }}
+          >
+            <div
+              style={{
+                background: "#ecfdf5",
+                padding: "0.75rem",
+                borderRadius: "50%",
+                color: "#059669",
+              }}
+            >
               <CheckCircle size={24} />
             </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-muted)' }}>Terverifikasi</h3>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#059669' }}>{documents.length}</div>
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: "0.875rem",
+                  color: "var(--text-muted)",
+                }}
+              >
+                Terverifikasi
+              </h3>
+              <div
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  color: "#059669",
+                }}
+              >
+                {documents.length}
+              </div>
             </div>
           </div>
         </div>
@@ -137,40 +207,126 @@ const HolderDashboard = () => {
           ) : documents.length === 0 ? (
             <div className="empty-state">
               <FileText className="empty-icon" />
-              <p className="form-label" style={{ fontSize: '1.1rem' }}>Anda belum memiliki sertifikat digital</p>
+              <p className="form-label" style={{ fontSize: "1.1rem" }}>
+                Anda belum memiliki sertifikat digital
+              </p>
             </div>
           ) : (
-            <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead style={{ background: '#f8fafc', borderBottom: '1px solid var(--border-color)' }}>
+            <div className="card" style={{ padding: "0", overflow: "hidden" }}>
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                  <thead
+                    style={{
+                      background: "#f8fafc",
+                      borderBottom: "1px solid var(--border-color)",
+                    }}
+                  >
                     <tr>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-muted)' }}>NAMA DOKUMEN</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-muted)' }}>PENERBIT</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-muted)' }}>TANGGAL</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-muted)' }}>TOKEN ID</th>
-                      <th style={{ padding: '1rem', textAlign: 'right', fontSize: '0.875rem', color: 'var(--text-muted)' }}>AKSI</th>
+                      <th
+                        style={{
+                          padding: "1rem",
+                          textAlign: "left",
+                          fontSize: "0.875rem",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        NAMA DOKUMEN
+                      </th>
+                      <th
+                        style={{
+                          padding: "1rem",
+                          textAlign: "left",
+                          fontSize: "0.875rem",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        PENERBIT
+                      </th>
+                      <th
+                        style={{
+                          padding: "1rem",
+                          textAlign: "left",
+                          fontSize: "0.875rem",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        TANGGAL
+                      </th>
+                      <th
+                        style={{
+                          padding: "1rem",
+                          textAlign: "left",
+                          fontSize: "0.875rem",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        TOKEN ID
+                      </th>
+                      <th
+                        style={{
+                          padding: "1rem",
+                          textAlign: "right",
+                          fontSize: "0.875rem",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        AKSI
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {documents.map((doc, index) => (
-                      <tr key={index} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                        <td style={{ padding: '1rem', fontWeight: '500' }}>{doc.title}</td>
-                        <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>{doc.issuer}</td>
-                        <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>
+                      <tr
+                        key={index}
+                        style={{
+                          borderBottom: "1px solid var(--border-color)",
+                        }}
+                      >
+                        <td style={{ padding: "1rem", fontWeight: "500" }}>
+                          {doc.title}
+                        </td>
+                        <td
+                          style={{
+                            padding: "1rem",
+                            color: "var(--text-muted)",
+                          }}
+                        >
+                          {doc.issuer}
+                        </td>
+                        <td
+                          style={{
+                            padding: "1rem",
+                            color: "var(--text-muted)",
+                          }}
+                        >
                           {new Date(doc.issue_date).toLocaleDateString("id-ID")}
                         </td>
-                        <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--primary-color)' }}>
+                        <td
+                          style={{
+                            padding: "1rem",
+                            fontFamily: "monospace",
+                            color: "var(--primary-color)",
+                          }}
+                        >
                           #{doc.token_id}
                         </td>
-                        <td style={{ padding: '1rem', textAlign: 'right' }}>
-                          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                        <td style={{ padding: "1rem", textAlign: "right" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-end",
+                              gap: "0.5rem",
+                            }}
+                          >
                             <a
                               href={`https://sepolia.etherscan.io/tx/${doc.tx_hash}`}
                               target="_blank"
                               rel="noreferrer"
                               className="btn-white"
-                              style={{ padding: '0.5rem', display: 'inline-flex' }}
+                              style={{
+                                padding: "0.5rem",
+                                display: "inline-flex",
+                              }}
                               title="Cek di Blockchain"
                             >
                               <ExternalLink size={16} />
@@ -178,7 +334,10 @@ const HolderDashboard = () => {
                             <a
                               href={doc.file_url}
                               className="btn-white"
-                              style={{ padding: '0.5rem', display: 'inline-flex' }}
+                              style={{
+                                padding: "0.5rem",
+                                display: "inline-flex",
+                              }}
                               title="Unduh File"
                             >
                               <Download size={16} />
@@ -193,7 +352,6 @@ const HolderDashboard = () => {
             </div>
           )}
         </section>
-
       </main>
     </div>
   );

@@ -8,11 +8,13 @@ import { Web3Context } from "../../context/Web3Context";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-  const { connectWallet, currentAccount } = useContext(Web3Context);
+  const { connectWallet, currentAccount, disconnectWallet } =
+    useContext(Web3Context);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
+    disconnectWallet();
     navigate("/");
   };
 

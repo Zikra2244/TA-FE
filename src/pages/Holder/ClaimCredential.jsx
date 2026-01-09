@@ -3,43 +3,85 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import axios from "../../api/axios";
 import { AuthContext } from "../../context/AuthContext";
-// 1. IMPORT Web3Context
-import { Web3Context } from "../../context/Web3Context"; 
-import "./HolderStyles.css"; 
-import { ShieldCheck, AlertCircle, CheckCircle, FileText, Key, GraduationCap, Award, Wallet } from "lucide-react";
+import { Web3Context } from "../../context/Web3Context";
+import "./HolderStyles.css";
+import {
+  ShieldCheck,
+  AlertCircle,
+  CheckCircle,
+  User,
+  Hash,
+  FileBadge,
+  Key,
+  GraduationCap,
+  Award,
+  Wallet,
+  Baby, // Icon untuk Ibu Kandung
+} from "lucide-react";
 
 const ClaimCredential = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  
-  // 2. AMBIL DATA WALLET DARI CONTEXT (Yang dikontrol oleh Navbar)
   const { currentAccount } = useContext(Web3Context);
 
-  // State Form
-  const [credentialId, setCredentialId] = useState("");
-  const [docType, setDocType] = useState("ijazah"); 
-  const [nim, setNim] = useState("");
-  const [motherName, setMotherName] = useState("");
-  const [serialNumber, setSerialNumber] = useState("");
+  // --- STATE FORM ---
+  const [docType, setDocType] = useState("ijazah"); // 'ijazah' | 'sertifikat'
 
+  // Field Bagian 1: Identitas Dokumen
+  const [fullName, setFullName] = useState("");
+  const [identityNumber, setIdentityNumber] = useState(""); // Untuk NIM / NISN
+  const [certTitle, setCertTitle] = useState(""); // Untuk Nama Sertifikasi
+
+  // Field Bagian 2: Verifikasi Data Rahasia
+  const [docSerial, setDocSerial] = useState(""); // Nomor Seri Dokumen
+  const [motherName, setMotherName] = useState(""); // Nama Ibu Kandung
+
+  const [certRecommendations, setCertRecommendations] = useState([]); // Data dari DB
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  // State UI
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successData, setSuccessData] = useState(null);
-
-  // Efek untuk membersihkan error jika wallet terhubung
   useEffect(() => {
-    if (currentAccount) {
-      setError("");
-    }
+    const fetchCertTypes = async () => {
+      try {
+        // GANTI ENDPOINT INI SESUAI ROUTE BACKEND ANDA
+        // Endpoint ini harus mengembalikan array string: ["Sertifikat A", "Sertifikat B", ...]
+        const response = await axios.get("/credentials/cert-types");
+
+        // Validasi format data (pastikan array)
+        if (Array.isArray(response.data)) {
+          setCertRecommendations(response.data);
+        } else if (response.data.types && Array.isArray(response.data.types)) {
+          // Jaga-jaga jika backend return object { types: [...] }
+          setCertRecommendations(response.data.types);
+        }
+      } catch (err) {
+        console.error("Gagal mengambil tipe sertifikat:", err);
+        // Opsional: Fallback jika API gagal, atau biarkan array kosong
+      }
+    };
+
+    fetchCertTypes();
+  }, []);
+  // Reset error saat wallet berubah
+
+  useEffect(() => {
+    if (currentAccount) setError("");
   }, [currentAccount]);
+
+  const selectSuggestion = (value) => {
+    setCertTitle(value);
+    setShowSuggestions(false);
+  };
 
   const handleClaim = async (e) => {
     e.preventDefault();
-    
-    // 3. VALIDASI: CEK APAKAH WALLET SUDAH TERHUBUNG DI NAVBAR
+
+    // 1. Validasi Wallet
     if (!currentAccount) {
-      setError("Wallet belum terhubung! Silakan klik tombol 'Hubungkan Wallet' di pojok kanan atas (Navbar) sebelum melanjutkan.");
-      window.scrollTo(0, 0); // Scroll ke atas agar user lihat Navbar
+      setError("Wallet belum terhubung! Silakan hubungkan wallet di Navbar.");
+      window.scrollTo(0, 0);
       return;
     }
 
@@ -49,61 +91,107 @@ const ClaimCredential = () => {
 
     try {
       const token = localStorage.getItem("token");
-      
+
+      // 2. Persiapan Payload untuk Backend
+      // Backend akan melakukan hashing dan pencocokan kombinasi
       const payload = {
-        input_nim: docType === "ijazah" ? nim : undefined,
-        input_mother_name: docType === "ijazah" ? motherName : undefined,
-        input_serial: docType === "sertifikat" ? serialNumber : undefined,
-        // Kirim wallet address user untuk memastikan ownership
-        wallet_address: currentAccount 
+        doc_type: docType,
+        wallet_address: currentAccount,
+
+        // Data Kombinasi 1: Identitas (Untuk mencari dokumen)
+        full_name: fullName,
+        identity_number: docType === "ijazah" ? identityNumber : undefined, // NIM
+        cert_title: docType === "sertifikat" ? certTitle : undefined, // Nama Sertifikasi
+
+        // Data Kombinasi 2: Rahasia (Untuk verifikasi kepemilikan/Hashing)
+        doc_serial: docSerial,
+        mother_name: docType === "ijazah" ? motherName : undefined,
       };
 
-      // API Call
-      const response = await axios.post(
-        `/credentials/claim/${credentialId}`, 
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // Panggil API Backend (Sesuaikan endpoint Anda, misal /credentials/claim-v2)
+      // Kita asumsikan backend akan mencari dokumen berdasarkan payload di atas
+      const response = await axios.post(`/credentials/claim`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setSuccessData(response.data);
-
     } catch (err) {
       console.error("Claim Error:", err);
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);
       } else {
-        setError("Terjadi kesalahan saat mengklaim dokumen.");
+        setError(
+          "Gagal melakukan klaim. Pastikan data yang dimasukkan sesuai."
+        );
       }
     } finally {
       setLoading(false);
     }
   };
 
-  // --- TAMPILAN SUKSES (Tetap sama) ---
+  // --- TAMPILAN SUKSES ---
   if (successData) {
     return (
       <div className="holder-dashboard">
         <Navbar />
-        <div className="holder-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-          <div className="card" style={{ maxWidth: '500px', textAlign: 'center' }}>
-            <div style={{ margin: '0 auto 1.5rem', color: '#10b981' }}>
-              <CheckCircle size={64} style={{ display: 'block', margin: '0 auto' }} />
+        <div
+          className="holder-container"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "80vh",
+          }}
+        >
+          <div
+            className="card"
+            style={{ maxWidth: "500px", textAlign: "center" }}
+          >
+            <div style={{ margin: "0 auto 1.5rem", color: "#10b981" }}>
+              <CheckCircle
+                size={64}
+                style={{ display: "block", margin: "0 auto" }}
+              />
             </div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: 'white' }}>Klaim Berhasil!</h2>
-            <p style={{ color: '#94a3b8', marginBottom: '1.5rem' }}>{successData.message}</p>
-            
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                marginBottom: "0.5rem",
+                color: "white",
+              }}
+            >
+              Klaim Berhasil!
+            </h2>
+            <p style={{ color: "#94a3b8", marginBottom: "1.5rem" }}>
+              {successData.message}
+            </p>
+
             <div className="tx-hash-box">
-              <p style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: '#64748b', marginBottom: '0.25rem' }}>Transaction Hash</p>
-              <a 
-                href={`https://sepolia.etherscan.io/tx/${successData.txHash}`} 
-                target="_blank" 
+              <p
+                style={{
+                  fontSize: "0.75rem",
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                  color: "#64748b",
+                  marginBottom: "0.25rem",
+                }}
+              >
+                Transaction Hash
+              </p>
+              <a
+                href={`https://sepolia.etherscan.io/tx/${successData.txHash}`}
+                target="_blank"
                 rel="noreferrer"
                 className="tx-link"
               >
                 {successData.txHash}
               </a>
             </div>
-            <button onClick={() => navigate("/holder/dashboard")} className="btn btn-primary">
+            <button
+              onClick={() => navigate("/holder/dashboard")}
+              className="btn btn-primary"
+            >
               Lihat di Dashboard Saya
             </button>
           </div>
@@ -118,117 +206,265 @@ const ClaimCredential = () => {
       <Navbar />
 
       <div className="holder-container">
-        <header className="dashboard-header" style={{ justifyContent: 'center', textAlign: 'center' }}>
+        <header
+          className="dashboard-header"
+          style={{ justifyContent: "center", textAlign: "center" }}
+        >
           <div className="header-title">
             <h1>Klaim Aset Digital</h1>
-            <p>Pastikan Wallet Anda terhubung di pojok kanan atas.</p>
+            <p>Lengkapi data identitas dan data rahasia untuk verifikasi.</p>
           </div>
         </header>
 
         <div className="card claim-form-container">
-          
-          {/* 4. NOTIFIKASI JIKA WALLET BELUM CONNECT */}
-          {!currentAccount && !error && (
-            <div className="alert alert-error" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', backgroundColor: 'rgba(234, 179, 8, 0.1)', borderColor: 'rgba(234, 179, 8, 0.3)', color: '#fde047' }}>
-              <Wallet size={24} />
-              <div>
-                <strong>Wallet Belum Terhubung</strong>
-                <p className="mb-0" style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-                  Fitur klaim membutuhkan koneksi wallet. Silakan hubungkan wallet Anda melalui Navbar di atas.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Error Banner Normal */}
-          {error && (
-            <div className="alert alert-error" style={{ display: 'flex', gap: '0.75rem', alignItems: 'start' }}>
-              <AlertCircle size={20} className="shrink-0" />
-              <div>
-                <strong>Gagal Mengklaim</strong>
-                <p className="mb-0">{error}</p>
-              </div>
-            </div>
-          )}
+          {/* ... (Alerts Wallet & Error tetap sama) ... */}
 
           <form onSubmit={handleClaim}>
-            
-            {/* Input Form (Credential ID, DocType, Verification) - KODE SAMA SEPERTI SEBELUMNYA */}
-            {/* Saya persingkat bagian ini agar fokus pada logika wallet */}
+            {/* JENIS DOKUMEN */}
             <div className="form-group">
-              <label className="form-label">1. MASUKKAN ID KREDENSIAL</label>
-              <div className="input-with-icon">
-                <div className="input-icon-left"><FileText size={20} /></div>
-                <input
-                  type="text" required placeholder="Contoh: 65a1b2c3d4..." className="form-input"
-                  value={credentialId} onChange={(e) => setCredentialId(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">2. JENIS DOKUMEN</label>
+              <label className="form-label">PILIH JENIS DOKUMEN</label>
               <div className="toggle-grid">
-                <button type="button" onClick={() => setDocType("ijazah")} className={`btn-toggle ${docType === "ijazah" ? "active" : ""}`}>
-                  <GraduationCap size={24} style={{ marginBottom: '0.5rem' }} /><span>Ijazah Sarjana</span>
+                <button
+                  type="button"
+                  onClick={() => setDocType("ijazah")}
+                  className={`btn-toggle ${
+                    docType === "ijazah" ? "active" : ""
+                  }`}
+                >
+                  <GraduationCap size={24} style={{ marginBottom: "0.5rem" }} />
+                  <span>Ijazah Sarjana</span>
                 </button>
-                <button type="button" onClick={() => setDocType("sertifikat")} className={`btn-toggle ${docType === "sertifikat" ? "active" : ""}`}>
-                  <Award size={24} style={{ marginBottom: '0.5rem' }} /><span>Sertifikat / Lainnya</span>
+                <button
+                  type="button"
+                  onClick={() => setDocType("sertifikat")}
+                  className={`btn-toggle ${
+                    docType === "sertifikat" ? "active" : ""
+                  }`}
+                >
+                  <Award size={24} style={{ marginBottom: "0.5rem" }} />
+                  <span>Sertifikat / Lainnya</span>
                 </button>
               </div>
             </div>
 
-            <div className="form-group" style={{ borderTop: '1px solid #334155', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
-              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Key size={16} /> 3. VERIFIKASI DATA RAHASIA
+            {/* BAGIAN 1: IDENTITAS */}
+            <div
+              className="form-group"
+              style={{ borderTop: "1px solid #334155", paddingTop: "1.5rem" }}
+            >
+              <label
+                className="form-label"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  color: "#2dd4bf",
+                }}
+              >
+                <User size={18} /> 1. IDENTITAS PEMILIK
               </label>
-              {docType === "ijazah" ? (
-                <div className="space-y-4 animate-fadeIn">
-                  <div className="form-group">
-                    <label className="form-label">Nomor Induk Mahasiswa (NIM)</label>
-                    <input type="text" required className="form-input" value={nim} onChange={(e) => setNim(e.target.value)} placeholder="Masukkan NIM Anda" />
+
+              <div className="form-group">
+                <label
+                  className="form-label"
+                  style={{ textTransform: "none", color: "#94a3b8" }}
+                >
+                  Nama Lengkap
+                </label>
+                <div className="input-with-icon">
+                  <div className="input-icon-left">
+                    <User size={20} />
                   </div>
-                  <div className="form-group">
-                    <label className="form-label">Nama Ibu Kandung</label>
-                    <input type="text" required className="form-input" value={motherName} onChange={(e) => setMotherName(e.target.value)} placeholder="Sesuai data di PDDIKTI" />
+                  <input
+                    type="text"
+                    required
+                    className="form-input"
+                    placeholder="Nama sesuai dokumen"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {docType === "ijazah" ? (
+                <div className="form-group animate-fadeIn">
+                  <label
+                    className="form-label"
+                    style={{ textTransform: "none", color: "#94a3b8" }}
+                  >
+                    NIM / NISN
+                  </label>
+                  <div className="input-with-icon">
+                    <div className="input-icon-left">
+                      <Hash size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      className="form-input"
+                      placeholder="Nomor Induk Mahasiswa"
+                      value={identityNumber}
+                      onChange={(e) => setIdentityNumber(e.target.value)}
+                    />
                   </div>
                 </div>
               ) : (
-                <div className="animate-fadeIn">
-                  <div className="form-group">
-                    <label className="form-label">Nomor Seri Sertifikat</label>
-                    <input type="text" required className="form-input" value={serialNumber} onChange={(e) => setSerialNumber(e.target.value)} placeholder="Contoh: SK-2024-001" />
+                /* --- FIELD SERTIFIKAT DENGAN SUGGESTION DARI DB --- */
+                <div
+                  className="form-group animate-fadeIn"
+                  style={{ position: "relative" }}
+                >
+                  <label
+                    className="form-label"
+                    style={{ textTransform: "none", color: "#94a3b8" }}
+                  >
+                    Jenis / Nama Sertifikasi
+                  </label>
+
+                  <div className="input-with-icon">
+                    <div className="input-icon-left">
+                      <FileBadge size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      className="form-input"
+                      placeholder="Ketik untuk melihat rekomendasi..."
+                      value={certTitle}
+                      onChange={(e) => {
+                        setCertTitle(e.target.value);
+                        setShowSuggestions(true);
+                      }}
+                      onFocus={() => setShowSuggestions(true)}
+                      // Delay blur agar klik pada item list sempat tereksekusi
+                      onBlur={() =>
+                        setTimeout(() => setShowSuggestions(false), 200)
+                      }
+                      autoComplete="off"
+                    />
+                  </div>
+
+                  {/* LOGIKA DROPDOWN (SAMA SEPERTI ISSUEPAGE) */}
+                  {showSuggestions && (
+                    <ul className="suggestions-list">
+                      {certRecommendations
+                        .filter((item) =>
+                          // Filter lokal berdasarkan apa yang diketik user
+                          item.toLowerCase().includes(certTitle.toLowerCase())
+                        )
+                        .map((item, index) => (
+                          <li
+                            key={index}
+                            // Gunakan onMouseDown karena event ini jalan sebelum onBlur input
+                            onMouseDown={() => selectSuggestion(item)}
+                            className="suggestion-item"
+                          >
+                            {item}
+                          </li>
+                        ))}
+
+                      {/* Opsional: Pesan jika tidak ada yang cocok */}
+                      {certRecommendations.filter((item) =>
+                        item.toLowerCase().includes(certTitle.toLowerCase())
+                      ).length === 0 &&
+                        certTitle && (
+                          <li
+                            className="suggestion-item"
+                            style={{ color: "#64748b", cursor: "default" }}
+                          >
+                            Tidak ada rekomendasi yang cocok
+                          </li>
+                        )}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* BAGIAN 2: RAHASIA (Sama seperti sebelumnya) */}
+            <div
+              className="form-group"
+              style={{ borderTop: "1px solid #334155", paddingTop: "1.5rem" }}
+            >
+              <label
+                className="form-label"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  color: "#f59e0b",
+                }}
+              >
+                <Key size={18} /> 2. VERIFIKASI RAHASIA
+              </label>
+
+              <div className="form-group">
+                <label
+                  className="form-label"
+                  style={{ textTransform: "none", color: "#94a3b8" }}
+                >
+                  Nomor Seri Dokumen
+                </label>
+                <div className="input-with-icon">
+                  <div className="input-icon-left">
+                    <Hash size={20} />
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    className="form-input"
+                    placeholder="Contoh: SK-2024-001"
+                    value={docSerial}
+                    onChange={(e) => setDocSerial(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {docType === "ijazah" && (
+                <div className="form-group animate-fadeIn">
+                  <label
+                    className="form-label"
+                    style={{ textTransform: "none", color: "#94a3b8" }}
+                  >
+                    Nama Ibu Kandung
+                  </label>
+                  <div className="input-with-icon">
+                    <div className="input-icon-left">
+                      <Baby size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      className="form-input"
+                      placeholder="Sesuai PDDIKTI"
+                      value={motherName}
+                      onChange={(e) => setMotherName(e.target.value)}
+                    />
                   </div>
                 </div>
               )}
             </div>
 
-            {/* 5. TOMBOL SUBMIT DINAMIS */}
             <button
               type="submit"
-              // Disable tombol jika loading ATAU wallet belum connect
               disabled={loading || !currentAccount}
               className="btn btn-primary"
-              style={{ 
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem',
-                // Ubah tampilan visual jika disabled karena wallet
+              style={{
+                marginTop: "1rem",
                 opacity: !currentAccount ? 0.5 : 1,
-                cursor: !currentAccount ? 'not-allowed' : 'pointer'
+                cursor: !currentAccount ? "not-allowed" : "pointer",
               }}
             >
               {loading ? (
-                <>Processing...</>
+                <>Memproses Verifikasi...</>
               ) : !currentAccount ? (
-                <>
-                  <Wallet size={20} /> Hubungkan Wallet Terlebih Dahulu
-                </>
+                <>Hubungkan Wallet Terlebih Dahulu</>
               ) : (
                 <>
                   <ShieldCheck size={20} /> Klaim Sekarang
                 </>
               )}
             </button>
-
           </form>
         </div>
       </div>

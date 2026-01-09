@@ -18,7 +18,7 @@ const LandingPage = () => {
       case "issuer":
         return "/issuer/dashboard";
       case "owner":
-        return "/dashboard";
+        return "/holder/dashboard";
       default:
         return "/login";
     }
