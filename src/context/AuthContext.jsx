@@ -4,7 +4,6 @@ import axios from "../api/axios";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Inisialisasi state LANGSUNG dari localStorage agar tidak null saat refresh
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user_data");
     return savedUser ? JSON.parse(savedUser) : null;
@@ -14,9 +13,8 @@ export const AuthProvider = ({ children }) => {
     return localStorage.getItem("token") || null;
   });
 
-  const [loading, setLoading] = useState(false); // Tambah loading state jika perlu
+  const [loading, setLoading] = useState(false);
 
-  // Register
   const register = async (fullName, email, password, role) => {
     try {
       const response = await axios.post("/auth/register", {
@@ -31,7 +29,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login
   const login = async (email, password) => {
     try {
       setLoading(true);
@@ -42,15 +39,13 @@ export const AuthProvider = ({ children }) => {
 
       const { user, token } = response.data;
 
-      // Simpan ke State
       setUser(user);
       setToken(token);
 
-      // Simpan ke LocalStorage
       localStorage.setItem("user_data", JSON.stringify(user));
       localStorage.setItem("token", token);
 
-      return user; // <--- UBAH INI: Mengembalikan objek user (agar role bisa dibaca)
+      return user;
     } catch (error) {
       console.error("Login Gagal:", error);
       throw error.response ? error.response.data : new Error("Login Failed");
@@ -59,7 +54,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout
   const logout = () => {
     setUser(null);
     setToken(null);

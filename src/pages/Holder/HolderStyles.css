@@ -1,12 +1,9 @@
-/* =========================================================
-   1. GLOBAL & LAYOUT (BASE THEME: DARK SLATE)
-   ========================================================= */
 .holder-dashboard {
   min-height: 100vh;
-  background-color: #0f172a; /* Slate 900 */
+  background-color: #0f172a;
   color: white;
   font-family: "Inter", sans-serif;
-  padding-top: 80px; /* Space for fixed Navbar if needed */
+  padding-top: 80px;
 }
 
 .holder-content {
@@ -15,21 +12,18 @@
   padding: 2rem;
 }
 
-.holder-container { /* Alias untuk holder-content jika dipakai di claim */
+.holder-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
 
-/* =========================================================
-   2. HEADER SECTION
-   ========================================================= */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 3rem;
-  background: rgba(30, 41, 59, 0.5); /* Slate 800 + Opacity */
+  background: rgba(30, 41, 59, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 2rem;
   border-radius: 16px;
@@ -42,21 +36,20 @@
   font-size: 2rem;
   font-weight: 700;
   margin: 0 0 0.5rem 0;
-  /* Gradient Text: Teal/Green */
-  background: linear-gradient(90deg, #34d399, #2dd4bf); 
+
+  background: linear-gradient(90deg, #34d399, #2dd4bf);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .header-title p {
-  color: #94a3b8; /* Slate 400 */
+  color: #94a3b8;
   margin: 0;
 }
 
-/* Wallet Badge (Header Action) */
 .wallet-badge {
   background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(45, 212, 191, 0.3); /* Teal border low opacity */
+  border: 1px solid rgba(45, 212, 191, 0.3);
   color: #2dd4bf;
   padding: 10px 20px;
   border-radius: 99px;
@@ -72,12 +65,8 @@
   box-shadow: 0 0 10px rgba(45, 212, 191, 0.2);
 }
 
-/* =========================================================
-   3. ACTION BANNER (DASHBOARD)
-   ========================================================= */
-/* Kotak biru/teal untuk ajakan klaim */
 .action-banner {
-  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%); /* Teal 700 to 800 */
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
   border: 1px solid #14b8a6;
   border-radius: 16px;
   padding: 2rem;
@@ -94,18 +83,15 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0 0 0.5rem 0;
-  color: #f0fdfa; /* Teal 50 */
+  color: #f0fdfa;
 }
 
 .banner-content p {
-  color: #ccfbf1; /* Teal 100 */
+  color: #ccfbf1;
   margin: 0;
   max-width: 600px;
 }
 
-/* =========================================================
-   4. STATS CARDS
-   ========================================================= */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -140,9 +126,6 @@
   color: white;
 }
 
-/* =========================================================
-   5. TABLE STYLES (Fixed Layout)
-   ========================================================= */
 .section-title {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
@@ -162,7 +145,7 @@
 .modern-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; 
+  table-layout: fixed;
 }
 
 .modern-table thead th {
@@ -193,11 +176,6 @@
   font-size: 0.95rem;
 }
 
-/* =========================================================
-   6. CLAIM PAGE & FORMS (NEW - Adapted to Dark Theme)
-   ========================================================= */
-
-/* Reuse card style for generic containers */
 .card {
   background: #1e293b;
   padding: 2rem;
@@ -219,17 +197,16 @@
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #cbd5e1; /* Slate 300 */
+  color: #cbd5e1;
   margin-bottom: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* Input Fields - Dark Theme */
 .form-input {
   width: 100%;
   padding: 0.875rem 1rem;
-  background-color: #0f172a; /* Darker than card */
+  background-color: #0f172a;
   border: 1px solid #334155;
   border-radius: 8px;
   color: white;
@@ -240,7 +217,7 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #2dd4bf; /* Teal Accent */
+  border-color: #2dd4bf;
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
 }
 
@@ -248,7 +225,6 @@
   color: #475569;
 }
 
-/* Input with Icon */
 .input-with-icon {
   position: relative;
 }
@@ -267,7 +243,6 @@
   padding-left: 3rem;
 }
 
-/* Toggle Buttons (Ijazah vs Sertifikat) */
 .toggle-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -294,15 +269,12 @@
 }
 
 .btn-toggle.active {
-  background-color: rgba(45, 212, 191, 0.1); /* Teal tint */
+  background-color: rgba(45, 212, 191, 0.1);
   border-color: #2dd4bf;
   color: #2dd4bf;
   box-shadow: 0 0 15px rgba(45, 212, 191, 0.1);
 }
 
-/* =========================================================
-   7. BUTTONS
-   ========================================================= */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -317,11 +289,10 @@
   text-decoration: none;
 }
 
-/* Primary Button (Gradient Teal/Green) */
 .btn-primary {
   background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
   color: white;
-  width: 100%; /* For forms */
+  width: 100%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -337,20 +308,18 @@
   transform: none;
 }
 
-/* White/Light Button (For dark banners) */
 .btn-white {
   background: white;
   color: #0f766e;
   font-weight: 700;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-white:hover {
-  background: #f0fdfa; /* Very light teal */
+  background: #f0fdfa;
   transform: translateY(-1px);
 }
 
-/* Action Button Small (Table) */
 .btn-action-primary {
   background: #0f766e;
   color: white;
@@ -369,23 +338,20 @@
 }
 
 .btn-back {
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    margin-right: 1rem;
-    display: flex;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  margin-right: 1rem;
+  display: flex;
 }
 .btn-back:hover {
-    background: rgba(255,255,255,0.1);
-    color: white;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
-/* =========================================================
-   8. ALERTS & UTILITIES
-   ========================================================= */
 .alert {
   padding: 1rem;
   border-radius: 8px;
@@ -395,15 +361,15 @@
 }
 
 .alert-error {
-  background-color: rgba(220, 38, 38, 0.1); /* Red tint */
+  background-color: rgba(220, 38, 38, 0.1);
   border-color: rgba(220, 38, 38, 0.3);
-  color: #fca5a5; /* Light Red text */
+  color: #fca5a5;
 }
 
 .alert-success {
-    background-color: rgba(5, 150, 105, 0.1);
-    border-color: rgba(5, 150, 105, 0.3);
-    color: #6ee7b7;
+  background-color: rgba(5, 150, 105, 0.1);
+  border-color: rgba(5, 150, 105, 0.3);
+  color: #6ee7b7;
 }
 
 .tx-hash-box {
@@ -452,24 +418,32 @@
 }
 
 .loading-spinner {
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 3px solid #334155;
-    border-top-color: #2dd4bf;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 3rem auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid #334155;
+  border-top-color: #2dd4bf;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 3rem auto;
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fadeIn {
-    animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.4s ease-out forwards;
 }

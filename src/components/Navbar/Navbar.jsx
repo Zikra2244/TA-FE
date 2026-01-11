@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
-// Import Context
 import { AuthContext } from "../../context/AuthContext";
 import { Web3Context } from "../../context/Web3Context";
 
@@ -22,7 +21,6 @@ const Navbar = () => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
-  // --- PERBAIKAN: Fungsi Penerjemah Role ---
   const getRoleLabel = (role) => {
     switch (role) {
       case "admin":
@@ -55,18 +53,15 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="nav-actions logged-in">
-              {/* Info User */}
               <div className="user-profile">
                 <span className="user-name">
                   Halo, {user.fullName || "User"}
                 </span>
-                {/* Panggil fungsi getRoleLabel di sini */}
                 <span className={`user-role-badge ${user.role}`}>
                   {getRoleLabel(user.role)}
                 </span>
               </div>
 
-              {/* Tombol Web3 */}
               {!currentAccount ? (
                 <button onClick={connectWallet} className="nav-btn-connect">
                   🔗 Hubungkan Wallet
@@ -78,7 +73,6 @@ const Navbar = () => {
                 </div>
               )}
 
-              {/* Tombol Logout */}
               <button onClick={handleLogout} className="nav-btn-logout">
                 Keluar
               </button>

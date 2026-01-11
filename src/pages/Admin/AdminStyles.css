@@ -1,13 +1,11 @@
-/* Background Global Admin */
 .admin-page-container,
 .admin-dashboard {
   min-height: 100vh;
-  background-color: #0f172a; /* Slate 900 (Sedikit lebih terang dari Landing) */
+  background-color: #0f172a;
   color: white;
   font-family: "Inter", sans-serif;
 }
 
-/* --- LOGIN --- */
 .admin-page-container {
   display: flex;
   justify-content: center;
@@ -69,7 +67,6 @@
   text-align: center;
 }
 
-/* --- DASHBOARD --- */
 .admin-navbar {
   background: #1e293b;
   border-bottom: 1px solid #334155;
@@ -117,7 +114,6 @@
   padding-bottom: 1rem;
 }
 
-/* TABLE STYLES */
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -170,7 +166,7 @@
 
 .btn-delete {
   background: rgba(239, 68, 68, 0.2);
-  color: #fca5a5; /* Merah muda */
+  color: #fca5a5;
   border: 1px solid #ef4444;
   padding: 0.4rem 0.8rem;
   border-radius: 4px;

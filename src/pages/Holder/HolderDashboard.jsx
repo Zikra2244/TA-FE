@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "../../api/axios";
-import "./HolderStyles.css"; // Style yang disatukan
+import "./HolderStyles.css";
 import {
   Wallet,
   FileText,
@@ -17,19 +17,15 @@ const HolderDashboard = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // State
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [walletAddress, setWalletAddress] = useState("");
 
-  // Proteksi Halaman
   useEffect(() => {
     if (user && user.role !== "student") {
-      // navigate("/");
     }
   }, [user, navigate]);
 
-  // Fetch Data Dokumen
   useEffect(() => {
     const fetchMyDocuments = async () => {
       if (!user) return;
@@ -41,7 +37,7 @@ const HolderDashboard = () => {
         setDocuments(response.data);
       } catch (err) {
         console.error("Gagal mengambil dokumen:", err);
-        // Fallback Data Dummy
+
         setDocuments([
           {
             id: 1,
@@ -70,7 +66,6 @@ const HolderDashboard = () => {
     fetchMyDocuments();
   }, [user]);
 
-  // Simulasi Connect Wallet
   const connectWallet = () => {
     setWalletAddress("0x71C...9A21");
   };
@@ -82,7 +77,6 @@ const HolderDashboard = () => {
       <Navbar />
 
       <main className="holder-container">
-        {/* 1. HEADER AREA */}
         <header className="dashboard-header">
           <div className="header-title">
             <h1>Dompet Digital Akademik</h1>
@@ -92,8 +86,6 @@ const HolderDashboard = () => {
           </div>
         </header>
 
-        {/* 2. ACTION BANNER (TOMBOL KE HALAMAN CLAIM) */}
-        {/* Ini yang menghubungkan ke halaman ClaimCredential */}
         <div className="action-banner">
           <div className="banner-content">
             <h2>Belum punya Ijazah Digital di Wallet?</h2>
@@ -102,7 +94,7 @@ const HolderDashboard = () => {
               sertifikat digital yang terverifikasi di blockchain.
             </p>
           </div>
-          {/* Pastikan route '/holder/claim' sudah didaftarkan di App.js */}
+
           <button
             onClick={() => navigate("/holder/claim")}
             className="btn btn-white"
@@ -112,7 +104,6 @@ const HolderDashboard = () => {
           </button>
         </div>
 
-        {/* 3. STATS AREA */}
         <div
           style={{
             display: "grid",
@@ -198,7 +189,6 @@ const HolderDashboard = () => {
           </div>
         </div>
 
-        {/* 4. TABEL DOKUMEN */}
         <section>
           <h3 className="section-title">Aset Digital Saya</h3>
 

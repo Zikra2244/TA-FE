@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react"; // <--- PERBAIKAN: useEffect ditambahkan di sini
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import { AuthContext } from "../../context/AuthContext";
@@ -9,15 +9,14 @@ const IssuePage = () => {
   const { user, token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // State Data Form
   const [formData, setFormData] = useState({
-    documentType: "Ijazah Sarjana", // Default
+    documentType: "Ijazah Sarjana",
     recipientName: "",
     recipientNIM: "",
-    motherName: "", // Khusus Ijazah
-    serialNumber: "", // Wajib untuk semua
+    motherName: "",
+    serialNumber: "",
     issueDate: new Date().toISOString().split("T")[0],
-    certificationName: "", // Khusus Sertifikat
+    certificationName: "",
   });
 
   const [file, setFile] = useState(null);
@@ -25,17 +24,13 @@ const IssuePage = () => {
   const [statusMsg, setStatusMsg] = useState("");
   const [error, setError] = useState(null);
 
-  // State untuk Autocomplete Sertifikasi
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // Data Rekomendasi dari Database
   const [certRecommendations, setCertRecommendations] = useState([]);
 
-  // FETCH JENIS SERTIFIKASI SAAT HALAMAN DIMUAT
   useEffect(() => {
     const fetchCertTypes = async () => {
       try {
-        // Panggil API Backend
         const response = await axios.get("/credentials/cert-types", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -45,18 +40,15 @@ const IssuePage = () => {
       }
     };
 
-    // Panggil fungsi fetch hanya jika token tersedia
     if (token) {
       fetchCertTypes();
     }
   }, [token]);
 
-  // Handle Input Teks Biasa
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle Input Autocomplete (Sertifikasi)
   const handleCertChange = (e) => {
     const value = e.target.value;
     setFormData({ ...formData, certificationName: value });
@@ -68,16 +60,13 @@ const IssuePage = () => {
     setShowSuggestions(false);
   };
 
-  // Handle File Upload
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
   };
 
-  // --- LOGIKA DINAMIS DI SINI ---
   const renderDynamicFields = () => {
-    // KASUS 1: IJAZAH
     if (formData.documentType === "Ijazah Sarjana") {
       return (
         <>
@@ -127,10 +116,7 @@ const IssuePage = () => {
           </div>
         </>
       );
-    }
-
-    // KASUS 2: SERTIFIKAT (Kompetensi & Prestasi)
-    else if (formData.documentType.includes("Sertifikat")) {
+    } else if (formData.documentType.includes("Sertifikat")) {
       return (
         <>
           <div className="input-group">
@@ -145,7 +131,6 @@ const IssuePage = () => {
             />
           </div>
 
-          {/* Autocomplete Field untuk Jenis Sertifikasi */}
           <div className="input-group" style={{ position: "relative" }}>
             <label>Jenis/Nama Sertifikasi</label>
             <input
@@ -159,7 +144,7 @@ const IssuePage = () => {
               required
               autoComplete="off"
             />
-            {/* Dropdown Suggestion */}
+
             {showSuggestions && (
               <ul className="suggestions-list">
                 {certRecommendations
@@ -215,19 +200,17 @@ const IssuePage = () => {
 
     try {
       const data = new FormData();
-      // Field Wajib Semua Tipe
+
       data.append("document_type", formData.documentType);
       data.append("issue_date", formData.issueDate);
       data.append("file", file);
       data.append("recipient_name", formData.recipientName);
       data.append("serial_number", formData.serialNumber);
 
-      // Field Kondisional untuk Backend
       if (formData.documentType === "Ijazah Sarjana") {
         data.append("recipient_nim", formData.recipientNIM);
         data.append("mother_name", formData.motherName);
       } else {
-        // Sertifikasi
         data.append("program_name", formData.certificationName);
       }
 
@@ -247,17 +230,13 @@ const IssuePage = () => {
     } catch (err) {
       console.error(err);
 
-      // Tampilkan pesan error spesifik dari backend jika ada
       const serverMsg = err.response?.data?.message;
       setError(err.response?.data?.message || "Gagal menerbitkan dokumen.");
 
-      // Jika 403/401, kemungkinan token expired
       if (err.response?.status === 403 || err.response?.status === 401) {
         alert(
           "Sesi Anda telah berakhir atau tidak valid. Silakan Login ulang."
         );
-        // Opsional: Redirect ke login
-        // navigate("/login");
       }
     } finally {
       setLoading(false);
@@ -284,7 +263,6 @@ const IssuePage = () => {
             {error && <div className="error-banner">{error}</div>}
 
             <form onSubmit={handleSubmit} className="issue-form">
-              {/* UPLOAD AREA */}
               <div className="upload-area">
                 <input
                   type="file"
@@ -314,7 +292,6 @@ const IssuePage = () => {
                 </label>
               </div>
 
-              {/* PILIHAN JENIS DOKUMEN (PENTING: Ini yang mengontrol tampilan bawah) */}
               <div className="input-group" style={{ marginBottom: "2rem" }}>
                 <label style={{ color: "#00BFFF", fontWeight: "bold" }}>
                   Pilih Jenis Dokumen
@@ -339,12 +316,9 @@ const IssuePage = () => {
                 </div>
               </div>
 
-              {/* DYNAMIC FORM GRID */}
               <div className="form-grid">
-                {/* Panggil Fungsi Render di sini */}
                 {renderDynamicFields()}
 
-                {/* Field Tanggal (Selalu Muncul) */}
                 <div className="input-group">
                   <label>Tanggal Terbit</label>
                   <input

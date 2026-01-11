@@ -16,7 +16,7 @@ import {
   GraduationCap,
   Award,
   Wallet,
-  Baby, // Icon untuk Ibu Kandung
+  Baby,
 } from "lucide-react";
 
 const ClaimCredential = () => {
@@ -24,47 +24,37 @@ const ClaimCredential = () => {
   const { user } = useContext(AuthContext);
   const { currentAccount } = useContext(Web3Context);
 
-  // --- STATE FORM ---
-  const [docType, setDocType] = useState("ijazah"); // 'ijazah' | 'sertifikat'
+  const [docType, setDocType] = useState("ijazah");
 
-  // Field Bagian 1: Identitas Dokumen
   const [fullName, setFullName] = useState("");
-  const [identityNumber, setIdentityNumber] = useState(""); // Untuk NIM / NISN
-  const [certTitle, setCertTitle] = useState(""); // Untuk Nama Sertifikasi
+  const [identityNumber, setIdentityNumber] = useState("");
+  const [certTitle, setCertTitle] = useState("");
 
-  // Field Bagian 2: Verifikasi Data Rahasia
-  const [docSerial, setDocSerial] = useState(""); // Nomor Seri Dokumen
-  const [motherName, setMotherName] = useState(""); // Nama Ibu Kandung
-
-  const [certRecommendations, setCertRecommendations] = useState([]); // Data dari DB
+  const [docSerial, setDocSerial] = useState("");
+  const [motherName, setMotherName] = useState("");
+  const [certRecommendations, setCertRecommendations] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  // State UI
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successData, setSuccessData] = useState(null);
   useEffect(() => {
     const fetchCertTypes = async () => {
       try {
-        // GANTI ENDPOINT INI SESUAI ROUTE BACKEND ANDA
-        // Endpoint ini harus mengembalikan array string: ["Sertifikat A", "Sertifikat B", ...]
         const response = await axios.get("/credentials/cert-types");
 
-        // Validasi format data (pastikan array)
         if (Array.isArray(response.data)) {
           setCertRecommendations(response.data);
         } else if (response.data.types && Array.isArray(response.data.types)) {
-          // Jaga-jaga jika backend return object { types: [...] }
           setCertRecommendations(response.data.types);
         }
       } catch (err) {
         console.error("Gagal mengambil tipe sertifikat:", err);
-        // Opsional: Fallback jika API gagal, atau biarkan array kosong
       }
     };
 
     fetchCertTypes();
   }, []);
-  // Reset error saat wallet berubah
 
   useEffect(() => {
     if (currentAccount) setError("");
@@ -78,7 +68,6 @@ const ClaimCredential = () => {
   const handleClaim = async (e) => {
     e.preventDefault();
 
-    // 1. Validasi Wallet
     if (!currentAccount) {
       setError("Wallet belum terhubung! Silakan hubungkan wallet di Navbar.");
       window.scrollTo(0, 0);
@@ -92,24 +81,18 @@ const ClaimCredential = () => {
     try {
       const token = localStorage.getItem("token");
 
-      // 2. Persiapan Payload untuk Backend
-      // Backend akan melakukan hashing dan pencocokan kombinasi
       const payload = {
         doc_type: docType,
         wallet_address: currentAccount,
 
-        // Data Kombinasi 1: Identitas (Untuk mencari dokumen)
         full_name: fullName,
-        identity_number: docType === "ijazah" ? identityNumber : undefined, // NIM
-        cert_title: docType === "sertifikat" ? certTitle : undefined, // Nama Sertifikasi
+        identity_number: docType === "ijazah" ? identityNumber : undefined,
+        cert_title: docType === "sertifikat" ? certTitle : undefined,
 
-        // Data Kombinasi 2: Rahasia (Untuk verifikasi kepemilikan/Hashing)
         doc_serial: docSerial,
         mother_name: docType === "ijazah" ? motherName : undefined,
       };
 
-      // Panggil API Backend (Sesuaikan endpoint Anda, misal /credentials/claim-v2)
-      // Kita asumsikan backend akan mencari dokumen berdasarkan payload di atas
       const response = await axios.post(`/credentials/claim`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -129,7 +112,6 @@ const ClaimCredential = () => {
     }
   };
 
-  // --- TAMPILAN SUKSES ---
   if (successData) {
     return (
       <div className="holder-dashboard">
@@ -200,7 +182,6 @@ const ClaimCredential = () => {
     );
   }
 
-  // --- TAMPILAN FORM UTAMA ---
   return (
     <div className="holder-dashboard">
       <Navbar />
@@ -217,10 +198,7 @@ const ClaimCredential = () => {
         </header>
 
         <div className="card claim-form-container">
-          {/* ... (Alerts Wallet & Error tetap sama) ... */}
-
           <form onSubmit={handleClaim}>
-            {/* JENIS DOKUMEN */}
             <div className="form-group">
               <label className="form-label">PILIH JENIS DOKUMEN</label>
               <div className="toggle-grid">
@@ -247,7 +225,6 @@ const ClaimCredential = () => {
               </div>
             </div>
 
-            {/* BAGIAN 1: IDENTITAS */}
             <div
               className="form-group"
               style={{ borderTop: "1px solid #334155", paddingTop: "1.5rem" }}
@@ -309,7 +286,6 @@ const ClaimCredential = () => {
                   </div>
                 </div>
               ) : (
-                /* --- FIELD SERTIFIKAT DENGAN SUGGESTION DARI DB --- */
                 <div
                   className="form-group animate-fadeIn"
                   style={{ position: "relative" }}
@@ -336,7 +312,6 @@ const ClaimCredential = () => {
                         setShowSuggestions(true);
                       }}
                       onFocus={() => setShowSuggestions(true)}
-                      // Delay blur agar klik pada item list sempat tereksekusi
                       onBlur={() =>
                         setTimeout(() => setShowSuggestions(false), 200)
                       }
@@ -344,18 +319,15 @@ const ClaimCredential = () => {
                     />
                   </div>
 
-                  {/* LOGIKA DROPDOWN (SAMA SEPERTI ISSUEPAGE) */}
                   {showSuggestions && (
                     <ul className="suggestions-list">
                       {certRecommendations
                         .filter((item) =>
-                          // Filter lokal berdasarkan apa yang diketik user
                           item.toLowerCase().includes(certTitle.toLowerCase())
                         )
                         .map((item, index) => (
                           <li
                             key={index}
-                            // Gunakan onMouseDown karena event ini jalan sebelum onBlur input
                             onMouseDown={() => selectSuggestion(item)}
                             className="suggestion-item"
                           >
@@ -363,7 +335,6 @@ const ClaimCredential = () => {
                           </li>
                         ))}
 
-                      {/* Opsional: Pesan jika tidak ada yang cocok */}
                       {certRecommendations.filter((item) =>
                         item.toLowerCase().includes(certTitle.toLowerCase())
                       ).length === 0 &&
@@ -381,7 +352,6 @@ const ClaimCredential = () => {
               )}
             </div>
 
-            {/* BAGIAN 2: RAHASIA (Sama seperti sebelumnya) */}
             <div
               className="form-group"
               style={{ borderTop: "1px solid #334155", paddingTop: "1.5rem" }}

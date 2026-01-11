@@ -1,36 +1,31 @@
-/* ==========================================================================
-   1. GLOBAL CONTAINER & BACKGROUNDS (THE WEB3 ATMOSPHERE)
-   ========================================================================== */
 .landing-page {
   width: 100vw;
   min-height: 100vh;
-  background-color: #02040a; /* Ultra Dark Navy */
+  background-color: #02040a;
   color: #ffffff;
   font-family: "Inter", sans-serif;
   position: relative;
-  overflow-x: hidden; /* Mencegah scroll horizontal */
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   margin: 0;
   padding: 0;
 }
 
-/* Layer 1: Noise Texture (Agar terlihat premium/seperti film) */
 .landing-page::before {
   content: "";
-  position: fixed; /* Fixed menjamin dia menempel di viewport, bukan konten */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   width: 100vw;
-  height: 100vh; /* Paksa Full Viewport */
+  height: 100vh;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 1;
 }
 
-/* Layer 2: Aurora Mesh Gradients (Animasi Latar Belakang) */
 .landing-page::after {
   content: "";
   position: fixed;
@@ -50,7 +45,6 @@
   pointer-events: none;
 }
 
-/* Layer 3: Mouse Follow Glow (Interactive Senter) */
 .cursor-glow {
   position: fixed;
   width: 500px;
@@ -90,11 +84,10 @@
   gap: 4rem;
 }
 
-/* --- Hero Left: Text Content --- */
 .hero-content {
   flex: 1;
   max-width: 650px;
-  /* Animasi Masuk */
+
   opacity: 0;
   animation: slideUpFade 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   animation-delay: 0.2s;
@@ -116,7 +109,7 @@
 .pulse-dot {
   width: 8px;
   height: 8px;
-  background: #00ff94; /* Neon Green */
+  background: #00ff94;
   border-radius: 50%;
   box-shadow: 0 0 12px #00ff94;
   animation: pulse 2s infinite;
@@ -131,7 +124,6 @@
 }
 
 .gradient-text {
-  /* Gradient Mewah: Cyan -> Blue -> Purple */
   background: linear-gradient(135deg, #22d3ee 0%, #818cf8 50%, #c084fc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -151,7 +143,6 @@
   font-weight: 600;
 }
 
-/* CTA Buttons */
 .hero-cta {
   display: flex;
   gap: 1.5rem;
@@ -196,7 +187,6 @@
   transform: translateY(-2px);
 }
 
-/* Stats Row */
 .hero-stats {
   display: flex;
   gap: 4rem;
@@ -218,14 +208,13 @@
   margin-top: 5px;
 }
 
-/* --- Hero Right: 3D HOLOGRAPHIC CARD --- */
 .hero-visual {
   flex: 1;
   display: flex;
   justify-content: center;
-  perspective: 1200px; /* Memberikan kedalaman 3D */
+  perspective: 1200px;
   z-index: 5;
-  /* Animasi Masuk */
+
   opacity: 0;
   animation: fadeScaleIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   animation-delay: 0.4s;
@@ -234,7 +223,7 @@
 .holo-card-container {
   width: 380px;
   height: 560px;
-  transition: transform 0.1s ease-out; /* Smooth tilt follow mouse */
+  transition: transform 0.1s ease-out;
   transform-style: preserve-3d;
 }
 
@@ -243,14 +232,14 @@
   height: 80%;
   position: relative;
   border-radius: 30px;
-  /* Ultimate Glassmorphism */
+
   background: linear-gradient(
     165deg,
     rgba(255, 255, 255, 0.08) 0%,
     rgba(255, 255, 255, 0.01) 100%
   );
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-top: 1px solid rgba(255, 255, 255, 0.3); /* Highlight Edge */
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
 
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
@@ -262,10 +251,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transform-style: preserve-3d; /* Penting agar elemen anak melayang (pop-out) */
+  transform-style: preserve-3d;
 }
 
-/* Efek Kilauan (Shimmer) Bergerak */
 .card-shine {
   position: absolute;
   top: 0;
@@ -285,7 +273,6 @@
   animation: shimmerMove 6s infinite linear;
 }
 
-/* Konten Dalam Kartu (Semua Melayang 3D - translateZ) */
 .card-content {
   padding: 2.5rem;
   width: 100%;
@@ -293,7 +280,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transform: translateZ(30px); /* Maju ke depan */
+  transform: translateZ(30px);
   z-index: 2;
 }
 
@@ -322,7 +309,7 @@
 
 .card-body {
   text-align: center;
-  transform: translateZ(50px); /* Lebih maju lagi */
+  transform: translateZ(50px);
 }
 .card-body h3 {
   font-size: 2rem;
@@ -343,7 +330,7 @@
   position: relative;
   overflow: hidden;
 }
-/* Efek garis di dalam chip */
+
 .card-chip::after {
   content: "";
   position: absolute;
@@ -396,7 +383,6 @@
   letter-spacing: 1px;
 }
 
-/* Scroll Indicator */
 .scroll-indicator {
   position: absolute;
   bottom: 2rem;
@@ -422,14 +408,11 @@
   animation: scrollWheel 1.5s infinite;
 }
 
-/* ==========================================================================
-   3. FEATURES SECTION (GRID CARDS)
-   ========================================================================== */
 .features-section {
   position: relative;
   z-index: 5;
   padding: 1.5rem 5%;
-  background: #02040a; /* Seamless transition */
+  background: #02040a;
 }
 
 .features-container {
@@ -450,7 +433,7 @@
 
 .features-grid {
   display: grid;
-  /* Responsive Grid: Minimal lebar 300px, sisanya fit otomatis */
+
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 3rem;
 }
@@ -468,11 +451,10 @@
   align-items: flex-start;
 }
 
-/* Hover Effect: Lift Up + Glow Border */
 .feature-box:hover {
   transform: translateY(-12px);
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(59, 130, 246, 0.5); /* Blue Border */
+  border-color: rgba(59, 130, 246, 0.5);
   box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.15);
 }
 
@@ -504,7 +486,6 @@
   font-size: 1rem;
 }
 
-/* Feature Internal Glow (Bola cahaya biru saat hover) */
 .feature-glow {
   position: absolute;
   width: 120px;
@@ -521,9 +502,6 @@
   opacity: 0.5;
 }
 
-/* ==========================================================================
-   4. HOW IT WORKS SECTION
-   ========================================================================== */
 .how-it-works-section {
   padding: 1.5rem 5%;
   position: relative;
@@ -581,9 +559,6 @@
   line-height: 1.6;
 }
 
-/* ==========================================================================
-   5. ANIMATION KEYFRAMES
-   ========================================================================== */
 @keyframes auroraFloat {
   0% {
     transform: translate(0, 0) scale(1);
@@ -686,7 +661,7 @@
     padding-bottom: 4rem;
   }
   .hero-wrapper {
-    flex-direction: column-reverse; /* Gambar di atas, Teks di bawah pada Mobile */
+    flex-direction: column-reverse;
     text-align: center;
   }
 
@@ -707,7 +682,6 @@
     width: 100%;
   }
 
-  /* Resize card for mobile */
   .holo-card-container {
     width: 300px;
     height: 450px;
@@ -716,7 +690,7 @@
 
   .features-grid {
     grid-template-columns: 1fr;
-  } /* 1 Kolom di HP */
+  }
   .steps-container {
     flex-direction: column;
   }

@@ -10,7 +10,6 @@ const AdminDashboard = () => {
   const { user, token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Fetch Data Penerbit
   const fetchIssuers = async () => {
     try {
       const response = await axios.get("/admin/issuers", {
@@ -20,7 +19,7 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error("Gagal mengambil data issuer", error);
       if (error.response && error.response.status === 401) {
-        logout(); // Token expired
+        logout();
         navigate("/admin/login");
       }
     } finally {
@@ -29,7 +28,6 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (id, name) => {
-    // Konfirmasi ganda agar tidak salah hapus
     if (
       !window.confirm(
         `Yakin ingin menghapus akun penerbit "${name}"? Tindakan ini permanen.`
@@ -43,7 +41,7 @@ const AdminDashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Akun berhasil dihapus.");
-      fetchIssuers(); // Refresh data tabel otomatis
+      fetchIssuers();
     } catch (error) {
       console.error(error);
       alert("Gagal menghapus akun.");
@@ -58,7 +56,6 @@ const AdminDashboard = () => {
     }
   }, [user]);
 
-  // Fungsi Approve
   const handleApprove = async (id) => {
     if (!window.confirm("Setujui akun penerbit ini?")) return;
 
@@ -71,20 +68,17 @@ const AdminDashboard = () => {
         }
       );
       alert("Akun berhasil diaktifkan!");
-      fetchIssuers(); // Refresh list
+      fetchIssuers();
     } catch (error) {
       alert("Gagal menyetujui akun.");
     }
   };
 
-  // Pisahkan Pending dan Active
   const pendingIssuers = issuers.filter((i) => i.status === "pending_approval");
   const activeIssuers = issuers.filter((i) => i.status === "active");
 
   return (
     <div className="admin-dashboard">
-      {/* ... Navbar ... */}
-
       <main className="admin-content">
         <h1>Dashboard Pengelolaan Institusi</h1>
 
@@ -92,11 +86,9 @@ const AdminDashboard = () => {
           <p>Memuat data...</p>
         ) : (
           <>
-            {/* TABEL 1: PENDING */}
             <section className="dashboard-section">
               <h3>⏳ Menunggu Persetujuan ({pendingIssuers.length})</h3>
               <table className="admin-table">
-                {/* ... thead ... */}
                 <tbody>
                   {pendingIssuers.map((issuer) => (
                     <tr key={issuer.user_id}>
@@ -112,7 +104,6 @@ const AdminDashboard = () => {
                         >
                           ✅ Setujui
                         </button>
-                        {/* Tombol Hapus (Tolak) */}
                         <button
                           className="btn-delete"
                           onClick={() =>
@@ -128,7 +119,6 @@ const AdminDashboard = () => {
               </table>
             </section>
 
-            {/* TABEL 2: ACTIVE */}
             <section className="dashboard-section">
               <h3>✅ Penerbit Aktif ({activeIssuers.length})</h3>
               <table className="admin-table">
@@ -137,7 +127,7 @@ const AdminDashboard = () => {
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Status</th>
-                    <th>Aksi</th> {/* Tambah kolom Aksi */}
+                    <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -149,7 +139,6 @@ const AdminDashboard = () => {
                         <span className="badge-active">Active</span>
                       </td>
                       <td>
-                        {/* Tombol Hapus */}
                         <button
                           className="btn-delete"
                           onClick={() =>

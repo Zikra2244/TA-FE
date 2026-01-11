@@ -1,12 +1,11 @@
-/* Navbar Container */
 .navbar {
   width: 100%;
-  position: fixed; /* Fixed agar melayang saat scroll */
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
   background: #0a2540;
-  backdrop-filter: blur(12px); /* Efek Kaca */
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding: 1rem 0;
   transition: all 0.3s ease;
@@ -21,7 +20,6 @@
   align-items: center;
 }
 
-/* Logo */
 .navbar-logo {
   text-decoration: none;
   font-size: 1.5rem;
@@ -39,14 +37,12 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Actions Area */
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
-/* --- STATE: GUEST --- */
 .nav-link {
   color: #94a3b8;
   text-decoration: none;
@@ -74,7 +70,6 @@
   box-shadow: 0 0 25px rgba(0, 191, 255, 0.5);
 }
 
-/* --- STATE: LOGGED IN --- */
 .user-profile {
   display: flex;
   flex-direction: column;
@@ -98,7 +93,6 @@
   text-transform: uppercase;
 }
 
-/* Warna khusus per Role */
 .user-role-badge.admin {
   background: rgba(239, 68, 68, 0.2); /* Merah Transparan */
   color: #fca5a5;
@@ -116,7 +110,7 @@
   color: #6ee7b7;
   border: 1px solid rgba(16, 185, 129, 0.4);
 }
-/* Connect Wallet Button */
+
 .nav-btn-connect {
   background: transparent;
   border: 1px solid #00bfff;
@@ -132,7 +126,6 @@
   box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
 }
 
-/* Wallet Connected Badge */
 .wallet-badge {
   display: flex;
   align-items: center;
@@ -154,11 +147,10 @@
   box-shadow: 0 0 8px #00ff94;
 }
 
-/* Logout Button */
 .nav-btn-logout {
   background: transparent;
   border: none;
-  color: #ef4444; /* Merah */
+  color: #ef4444;
   font-weight: 600;
   cursor: pointer;
   font-size: 0.9rem;
@@ -168,11 +160,10 @@
   opacity: 0.8;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .user-profile {
     display: none;
-  } /* Sembunyikan nama di HP agar muat */
+  }
   .navbar-container {
     padding: 0 1rem;
   }

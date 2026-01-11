@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import { AuthContext } from "../../context/AuthContext";
-import "./AdminStyles.css"; // Kita buat CSS khusus admin nanti
+import "./AdminStyles.css";
 
 const AdminLoginPage = () => {
   const [email, setEmail] = useState("");
@@ -10,11 +10,7 @@ const AdminLoginPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Kita gunakan fungsi login manual di sini karena butuh cek role spesifik
-  // atau kita bisa update AuthContext, tapi manual di sini lebih aman utk isolasi
-  const { setUser, setToken } = useContext(AuthContext); // Asumsi AuthContext expose setter (jika tidak, sesuaikan)
-  // *Jika AuthContext tidak expose setter, gunakan fungsi login() biasa lalu cek user.role*
-  // Mari gunakan cara standar AuthContext:
+  const { setUser, setToken } = useContext(AuthContext);
   const { login } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -25,22 +21,18 @@ const AdminLoginPage = () => {
     setError("");
 
     try {
-      // Panggil fungsi login global
       const success = await login(email, password);
 
       if (success) {
-        // Cek localstorage atau state untuk memastikan dia admin
         const userData = JSON.parse(localStorage.getItem("user_data"));
 
         if (userData.role !== "admin") {
           setError("Akses Ditolak. Akun ini bukan Admin Institusi.");
-          // Logout paksa jika bukan admin
           localStorage.clear();
           window.location.reload();
           return;
         }
 
-        // Redirect ke Dashboard Admin
         navigate("/admin/dashboard");
       }
     } catch (err) {
