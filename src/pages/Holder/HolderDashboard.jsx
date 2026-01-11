@@ -4,8 +4,12 @@ import Navbar from "../../components/Navbar/Navbar";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "../../api/axios";
 import "./HolderStyles.css";
+import QRCode from "react-qr-code";
 import {
   Wallet,
+  Share2,
+  X,
+  Copy,
   FileText,
   CheckCircle,
   ExternalLink,
@@ -19,10 +23,15 @@ const HolderDashboard = () => {
 
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [walletAddress, setWalletAddress] = useState("");
+
+  // State untuk Modal Share
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [selectedDocForShare, setSelectedDocForShare] = useState(null);
 
   useEffect(() => {
+    // Redirect jika bukan student (opsional, sesuaikan logic)
     if (user && user.role !== "student") {
+      // navigate("/"); // Uncomment jika ingin membatasi akses
     }
   }, [user, navigate]);
 
@@ -34,30 +43,14 @@ const HolderDashboard = () => {
         const response = await axios.get("/credentials/my-documents", {
           headers: { Authorization: `Bearer ${token}` },
         });
+
+        // DEBUG: Cek struktur data di console browser
+        console.log("Data Dokumen Saya:", response.data);
+
         setDocuments(response.data);
       } catch (err) {
         console.error("Gagal mengambil dokumen:", err);
-
-        setDocuments([
-          {
-            id: 1,
-            title: "Sertifikat Kompetensi Blockchain",
-            issuer: "Badan Nasional Sertifikasi Profesi",
-            issue_date: "2026-01-05",
-            tx_hash: "0x123abc...",
-            token_id: "105",
-            file_url: "#",
-          },
-          {
-            id: 2,
-            title: "Ijazah Sarjana Komputer",
-            issuer: "Universitas Teknologi Digital",
-            issue_date: "2025-12-20",
-            tx_hash: "0x456def...",
-            token_id: "99",
-            file_url: "#",
-          },
-        ]);
+        setDocuments([]);
       } finally {
         setLoading(false);
       }
@@ -66,11 +59,35 @@ const HolderDashboard = () => {
     fetchMyDocuments();
   }, [user]);
 
-  const connectWallet = () => {
-    setWalletAddress("0x71C...9A21");
+  if (!user) return null;
+
+  // --- FUNGSI UTAMA PERBAIKAN ---
+  const handleOpenShare = (doc) => {
+    // Cek ID yang valid. Prioritaskan credential_id, fallback ke id, lalu token_id
+    const validId = doc.credential_id || doc.id || doc.token_id;
+
+    if (!validId) {
+      alert(
+        "ID Dokumen tidak valid atau belum digenerate. Tidak dapat membagikan."
+      );
+      console.error("Dokumen bermasalah (Missing ID):", doc);
+      return;
+    }
+
+    // Pastikan object state memiliki properti 'credential_id' yang konsisten
+    setSelectedDocForShare({ ...doc, credential_id: validId });
+    setShowShareModal(true);
   };
 
-  if (!user) return null;
+  const handleCopyLink = () => {
+    if (!selectedDocForShare || !selectedDocForShare.credential_id) {
+      alert("Link tidak valid.");
+      return;
+    }
+    const url = `${window.location.origin}/verify/${selectedDocForShare.credential_id}`;
+    navigator.clipboard.writeText(url);
+    alert("Link verifikasi berhasil disalin ke clipboard!");
+  };
 
   return (
     <div className="holder-dashboard">
@@ -104,91 +121,57 @@ const HolderDashboard = () => {
           </button>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "1.5rem",
-            marginBottom: "2.5rem",
-          }}
-        >
-          <div
-            className="card"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              padding: "1.5rem",
-            }}
-          >
+        <div className="stats-grid">
+          <div className="stat-card">
             <div
               style={{
-                background: "#eff6ff",
-                padding: "0.75rem",
-                borderRadius: "50%",
-                color: "var(--primary-color)",
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                marginBottom: "0.5rem",
               }}
             >
-              <FileText size={24} />
-            </div>
-            <div>
-              <h3
-                style={{
-                  margin: 0,
-                  fontSize: "0.875rem",
-                  color: "var(--text-muted)",
-                }}
-              >
-                Total Dokumen
-              </h3>
-              <div style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
-                {documents.length}
-              </div>
-            </div>
-          </div>
-
-          <div
-            className="card"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              padding: "1.5rem",
-            }}
-          >
-            <div
-              style={{
-                background: "#ecfdf5",
-                padding: "0.75rem",
-                borderRadius: "50%",
-                color: "#059669",
-              }}
-            >
-              <CheckCircle size={24} />
-            </div>
-            <div>
-              <h3
-                style={{
-                  margin: 0,
-                  fontSize: "0.875rem",
-                  color: "var(--text-muted)",
-                }}
-              >
-                Terverifikasi
-              </h3>
               <div
                 style={{
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  color: "#059669",
+                  padding: "10px",
+                  background: "rgba(255,255,255,0.1)",
+                  borderRadius: "8px",
                 }}
               >
-                {documents.length}
+                <FileText size={24} color="#94a3b8" />
               </div>
+              <h3>Total Dokumen</h3>
+            </div>
+            <div className="value">{documents.length}</div>
+          </div>
+
+          <div className="stat-card">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                marginBottom: "0.5rem",
+              }}
+            >
+              <div
+                style={{
+                  padding: "10px",
+                  background: "rgba(45, 212, 191, 0.1)",
+                  borderRadius: "8px",
+                }}
+              >
+                <CheckCircle size={24} color="#2dd4bf" />
+              </div>
+              <h3 style={{ color: "#2dd4bf" }}>Terverifikasi</h3>
+            </div>
+            <div className="value" style={{ color: "#2dd4bf" }}>
+              {documents.length}
             </div>
           </div>
         </div>
 
+        {/* --- TABLE SECTION --- */}
         <section>
           <h3 className="section-title">Aset Digital Saya</h3>
 
@@ -196,118 +179,89 @@ const HolderDashboard = () => {
             <div className="loading-spinner"></div>
           ) : documents.length === 0 ? (
             <div className="empty-state">
-              <FileText className="empty-icon" />
-              <p className="form-label" style={{ fontSize: "1.1rem" }}>
-                Anda belum memiliki sertifikat digital
-              </p>
+              <FileText className="empty-icon" style={{ margin: "0 auto" }} />
+              <p>ANDA BELUM MEMILIKI SERTIFIKAT DIGITAL</p>
             </div>
           ) : (
-            <div className="card" style={{ padding: "0", overflow: "hidden" }}>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                  <thead
-                    style={{
-                      background: "#f8fafc",
-                      borderBottom: "1px solid var(--border-color)",
-                    }}
-                  >
-                    <tr>
-                      <th
+            <div className="table-wrapper">
+              <table className="modern-table">
+                <thead>
+                  <tr>
+                    <th width="30%">NAMA DOKUMEN</th>
+                    <th width="25%">PENERBIT</th>
+                    <th width="20%">TANGGAL</th>
+                    <th width="10%">TOKEN ID</th>
+                    <th width="15%" style={{ textAlign: "right" }}>
+                      AKSI
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {documents.map((doc, index) => (
+                    <tr key={index}>
+                      {/* 1. Nama Dokumen */}
+                      <td style={{ fontWeight: "500", color: "#fff" }}>
+                        {doc.program_name || doc.document_type}
+                      </td>
+
+                      {/* 2. Penerbit */}
+                      <td style={{ color: "#94a3b8" }}>
+                        {doc.institution_name || "Institusi Tidak Dikenal"}
+                      </td>
+
+                      {/* 3. Tanggal */}
+                      <td style={{ color: "#94a3b8" }}>
+                        {doc.issue_date
+                          ? new Date(doc.issue_date).toLocaleDateString(
+                              "id-ID",
+                              {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              }
+                            )
+                          : "-"}
+                      </td>
+
+                      {/* 4. Token ID */}
+                      <td
                         style={{
-                          padding: "1rem",
-                          textAlign: "left",
-                          fontSize: "0.875rem",
-                          color: "var(--text-muted)",
+                          fontFamily: "monospace",
+                          color: "#2dd4bf",
+                          fontWeight: "bold",
                         }}
                       >
-                        NAMA DOKUMEN
-                      </th>
-                      <th
-                        style={{
-                          padding: "1rem",
-                          textAlign: "left",
-                          fontSize: "0.875rem",
-                          color: "var(--text-muted)",
-                        }}
-                      >
-                        PENERBIT
-                      </th>
-                      <th
-                        style={{
-                          padding: "1rem",
-                          textAlign: "left",
-                          fontSize: "0.875rem",
-                          color: "var(--text-muted)",
-                        }}
-                      >
-                        TANGGAL
-                      </th>
-                      <th
-                        style={{
-                          padding: "1rem",
-                          textAlign: "left",
-                          fontSize: "0.875rem",
-                          color: "var(--text-muted)",
-                        }}
-                      >
-                        TOKEN ID
-                      </th>
-                      <th
-                        style={{
-                          padding: "1rem",
-                          textAlign: "right",
-                          fontSize: "0.875rem",
-                          color: "var(--text-muted)",
-                        }}
-                      >
-                        AKSI
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {documents.map((doc, index) => (
-                      <tr
-                        key={index}
-                        style={{
-                          borderBottom: "1px solid var(--border-color)",
-                        }}
-                      >
-                        <td style={{ padding: "1rem", fontWeight: "500" }}>
-                          {doc.title}
-                        </td>
-                        <td
+                        #{doc.token_id !== undefined ? doc.token_id : "?"}
+                      </td>
+
+                      {/* 5. Aksi */}
+                      <td style={{ textAlign: "right" }}>
+                        <div
                           style={{
-                            padding: "1rem",
-                            color: "var(--text-muted)",
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            gap: "0.5rem",
                           }}
                         >
-                          {doc.issuer}
-                        </td>
-                        <td
-                          style={{
-                            padding: "1rem",
-                            color: "var(--text-muted)",
-                          }}
-                        >
-                          {new Date(doc.issue_date).toLocaleDateString("id-ID")}
-                        </td>
-                        <td
-                          style={{
-                            padding: "1rem",
-                            fontFamily: "monospace",
-                            color: "var(--primary-color)",
-                          }}
-                        >
-                          #{doc.token_id}
-                        </td>
-                        <td style={{ padding: "1rem", textAlign: "right" }}>
-                          <div
+                          {/* TOMBOL SHARE / QR */}
+                          <button
+                            onClick={() => handleOpenShare(doc)}
+                            className="btn-white"
                             style={{
-                              display: "flex",
-                              justifyContent: "flex-end",
-                              gap: "0.5rem",
+                              padding: "0.5rem",
+                              borderRadius: "6px",
+                              display: "inline-flex",
+                              border: "1px solid var(--border-color)",
+                              cursor: "pointer",
                             }}
+                            title="Bagikan / Tampilkan QR"
                           >
+                            <Share2 size={16} />
+                          </button>
+
+                          {/* TOMBOL CEK BLOCKCHAIN */}
+                          {doc.tx_hash && (
                             <a
                               href={`https://sepolia.etherscan.io/tx/${doc.tx_hash}`}
                               target="_blank"
@@ -315,33 +269,92 @@ const HolderDashboard = () => {
                               className="btn-white"
                               style={{
                                 padding: "0.5rem",
+                                borderRadius: "6px",
                                 display: "inline-flex",
+                                border: "1px solid var(--border-color)",
                               }}
                               title="Cek di Blockchain"
                             >
                               <ExternalLink size={16} />
                             </a>
+                          )}
+
+                          {/* TOMBOL DOWNLOAD */}
+                          {doc.file_url && (
                             <a
                               href={doc.file_url}
+                              target="_blank"
+                              rel="noreferrer"
                               className="btn-white"
                               style={{
                                 padding: "0.5rem",
+                                borderRadius: "6px",
                                 display: "inline-flex",
+                                border: "1px solid var(--border-color)",
                               }}
                               title="Unduh File"
                             >
                               <Download size={16} />
                             </a>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </section>
+
+        {/* --- MODAL SHARE --- */}
+        {showShareModal && selectedDocForShare && (
+          <div className="modal-overlay">
+            <div className="modal-content animate-fadeIn">
+              <div className="modal-header">
+                <h3>Bagikan Kredensial</h3>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="btn-close"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <div className="modal-body" style={{ textAlign: "center" }}>
+                <p style={{ color: "#64748b", marginBottom: "1.5rem" }}>
+                  Scan QR Code ini untuk memverifikasi keaslian dokumen di
+                  Blockchain.
+                </p>
+
+                <div
+                  style={{
+                    background: "white",
+                    padding: "1rem",
+                    borderRadius: "12px",
+                    display: "inline-block",
+                    marginBottom: "1.5rem",
+                  }}
+                >
+                  <QRCode
+                    value={`${window.location.origin}/verify/${selectedDocForShare.credential_id}`}
+                    size={200}
+                  />
+                </div>
+
+                <div className="input-group-copy">
+                  <input
+                    type="text"
+                    readOnly
+                    value={`${window.location.origin}/verify/${selectedDocForShare.credential_id}`}
+                  />
+                  <button onClick={handleCopyLink}>
+                    <Copy size={16} /> Salin
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

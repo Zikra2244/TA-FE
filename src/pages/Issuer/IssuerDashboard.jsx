@@ -81,7 +81,7 @@ const IssuerDashboard = () => {
               disabled={isPending}
               onClick={() => navigate("/issuer/issue")}
             >
-              {isPending ? "Akun Belum Aktif" : "➕ Terbitkan Ijazah Baru"}
+              {isPending ? "Akun Belum Aktif" : "➕ Mulai Tokenisasi Dokumen"}
             </button>
           </div>
         </div>

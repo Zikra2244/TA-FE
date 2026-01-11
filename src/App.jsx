@@ -14,6 +14,9 @@ import IssuePage from "./pages/Issuer/IssuePage";
 import HolderDashboard from "./pages/Holder/HolderDashboard";
 import ClaimCredential from "./pages/Holder/ClaimCredential";
 
+import VerificationPage from "./pages/Public/VerificationPage";
+import PublicVerification from "./pages/Public/PublicVerification";
+
 import { Web3Provider } from "./context/Web3Context";
 import { AuthProvider } from "./context/AuthContext";
 import "./App.css";
@@ -40,6 +43,10 @@ function App() {
 
             <Route path="/holder/dashboard" element={<HolderDashboard />} />
             <Route path="/holder/claim" element={<ClaimCredential />} />
+            <Route path="/verify/:id" element={<VerificationPage />} />
+
+            <Route path="/verify" element={<PublicVerification />} />
+            <Route path="/verify/:id" element={<PublicVerification />} />
           </Routes>
         </Web3Provider>
       </AuthProvider>

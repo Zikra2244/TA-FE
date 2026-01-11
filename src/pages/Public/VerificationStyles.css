@@ -1,0 +1,233 @@
+/* VerificationStyles.css */
+
+.verify-page {
+  min-height: 100vh;
+  background-color: #0f172a; /* Slate 900 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inter", sans-serif;
+  padding: 1.5rem;
+  color: #f1f5f9;
+}
+
+.verify-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Loading & Error States */
+.verify-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+  min-height: 50vh;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(45, 212, 191, 0.3);
+  border-top-color: #2dd4bf;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Main Card */
+.verify-card {
+  background: #1e293b; /* Slate 800 */
+  border: 1px solid #334155;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header Section */
+.verify-header {
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.verify-icon-wrapper {
+  background: rgba(255, 255, 255, 0.15);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.verify-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.verify-header p {
+  margin: 0;
+  color: #ccfbf1;
+  font-size: 0.9rem;
+}
+
+/* Content Body */
+.verify-body {
+  padding: 2rem;
+}
+
+.info-group {
+  margin-bottom: 1.5rem;
+}
+
+.info-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.info-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.info-sub {
+  display: block;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin-top: 0.25rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Blockchain Proof Section */
+.blockchain-proof {
+  background: rgba(15, 23, 42, 0.5); /* Darker background */
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+}
+
+.proof-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #2dd4bf; /* Teal accent */
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.proof-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.proof-row:last-child {
+  margin-bottom: 0;
+}
+
+.proof-row span {
+  color: #94a3b8;
+}
+
+.proof-code {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  background: rgba(45, 212, 191, 0.1);
+  color: #2dd4bf;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.hash-link {
+  color: #38bdf8; /* Sky blue for links */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.2s;
+}
+
+.hash-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Actions */
+.verify-actions {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #334155;
+}
+
+.btn-download-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+  background: #0f172a;
+  color: white;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  gap: 0.75rem;
+  transition: all 0.2s;
+}
+
+.btn-download-large:hover {
+  background: #1e293b;
+  border-color: #2dd4bf;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.1);
+}
+
+/* Footer */
+.verify-footer {
+  text-align: center;
+  margin-top: 2rem;
+  color: #64748b;
+  font-size: 0.8rem;
+}

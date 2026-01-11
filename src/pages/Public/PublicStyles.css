@@ -1,0 +1,318 @@
+/* --- VARIABLES (Aman disimpan global) --- */
+:root {
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --bg-input: #334155;
+  --primary: #2dd4bf;
+  --primary-hover: #14b8a6;
+  --secondary: #c084fc;
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --danger: #ef4444;
+}
+
+/* --- GLOBAL LAYOUT (Khusus Public Page) --- */
+.public-page {
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: "Inter", sans-serif;
+}
+
+.public-page .public-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* --- ANIMATIONS (Nama unik, jadi aman) --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* --- SCOPING DIMULAI DARI SINI --- */
+/* Semua class di bawah ini diberi awalan .public-page agar tidak merusak Login Page */
+
+/* STEP 1: TYPE SELECTION */
+.public-page .selection-header {
+  padding-top: 4rem;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.public-page .selection-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .public-page .selection-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.public-page .selection-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.public-page .selection-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+}
+
+.public-page .selection-card.card-ijazah:hover {
+  border-color: var(--primary);
+}
+
+.public-page .selection-card.card-sertifikat:hover {
+  border-color: var(--secondary);
+}
+
+.public-page .icon-wrapper {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  transition: transform 0.3s ease;
+}
+
+.public-page .selection-card:hover .icon-wrapper {
+  transform: scale(1.1);
+}
+
+/* Warna Utility */
+.public-page .bg-teal-soft {
+  background-color: rgba(45, 212, 191, 0.1);
+}
+.public-page .bg-purple-soft {
+  background-color: rgba(192, 132, 252, 0.1);
+}
+.public-page .text-teal {
+  color: var(--primary);
+}
+.public-page .text-purple {
+  color: var(--secondary);
+}
+
+/* --- FORM & CARDS --- */
+.public-page .search-card {
+  max-width: 550px;
+  margin: 4rem auto;
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  padding: 2.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.public-page .search-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.public-page .back-button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  transition: color 0.2s;
+}
+
+.public-page .back-button:hover {
+  color: var(--text-main);
+}
+
+/* INPUT FIELDS (Ini yang paling sering merusak halaman lain) */
+.public-page .input-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.public-page .input-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.public-page .input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.public-page .input-icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.public-page .form-input,
+.public-page .form-select {
+  width: 100%;
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  color: white;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  /* Pastikan box-sizing border-box agar padding tidak menambah lebar */
+  box-sizing: border-box;
+}
+
+.public-page .form-input:focus,
+.public-page .form-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+}
+
+/* SECRET INPUT */
+.public-page .secret-input {
+  font-family: "Courier New", Courier, monospace;
+  letter-spacing: 0.2em;
+  text-align: center;
+  font-size: 1.25rem;
+  padding-left: 1rem !important;
+  font-weight: bold;
+  color: var(--primary);
+  background-color: rgba(15, 23, 42, 0.8);
+}
+
+.public-page .secret-input::placeholder {
+  font-family: "Inter", sans-serif;
+  letter-spacing: normal;
+  font-size: 1rem;
+  font-weight: normal;
+  opacity: 0.5;
+}
+
+/* BUTTONS */
+.public-page .btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, #115e59 100%);
+  color: #fff;
+  font-weight: 600;
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.public-page .btn-primary:hover {
+  opacity: 0.9;
+}
+
+.public-page .btn-primary:active {
+  transform: scale(0.98);
+}
+
+.public-page .btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.public-page .btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.public-page .btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+/* LIST KANDIDAT */
+.public-page .candidate-list-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.public-page .candidate-item {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 1.25rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 0.75rem;
+}
+
+.public-page .candidate-item:hover {
+  border-color: var(--primary);
+  background-color: rgba(45, 212, 191, 0.05);
+}
+
+.public-page .candidate-masked-badge {
+  font-family: monospace;
+  background-color: var(--bg-dark);
+  color: var(--primary);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  border: 1px solid rgba(45, 212, 191, 0.2);
+}
+
+/* SPINNER */
+.public-page .spinner {
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid var(--primary);
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
