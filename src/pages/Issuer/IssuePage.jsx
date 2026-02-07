@@ -15,7 +15,7 @@ const IssuePage = () => {
     recipientNIM: "",
     motherName: "",
     serialNumber: "",
-    issueDate: new Date().toISOString().split("T")[0],
+    issueDate: new Date().toLocaleDateString("en-CA"),
     certificationName: "",
   });
 

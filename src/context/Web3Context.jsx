@@ -12,6 +12,33 @@ export const Web3Provider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [academicNftContract, setAcademicNftContract] = useState(null);
 
+  // --- FUNGSI HELPER: Panggil Backend ---
+  const syncWalletToBackend = async (walletAddress) => {
+    try {
+      const token = localStorage.getItem("token"); // Ambil JWT Token dari Login
+      if (!token) return; // Jika belum login, skip
+
+      // Ganti URL sesuai port backend Anda (biasanya 3001)
+      const response = await fetch(
+        "http://localhost:3001/api/users/profile/wallet",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ walletAddress }),
+        }
+      );
+
+      const data = await response.json();
+      console.log("[Web3] Sync Wallet Success:", data.message);
+    } catch (error) {
+      console.error("[Web3] Gagal sinkronisasi wallet ke backend:", error);
+    }
+  };
+  // -------------------------------------
+
   const getEthereumContract = async () => {
     if (!ethereum) return null;
 
@@ -41,6 +68,9 @@ export const Web3Provider = ({ children }) => {
       if (accounts.length > 0) {
         setCurrentAccount(accounts[0]);
 
+        // Opsional: Sync lagi saat refresh halaman untuk memastikan
+        syncWalletToBackend(accounts[0]);
+
         const contract = await getEthereumContract();
         setAcademicNftContract(contract);
       } else {
@@ -57,12 +87,18 @@ export const Web3Provider = ({ children }) => {
 
       setIsLoading(true);
 
+      // 1. Request ke MetaMask
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
 
-      setCurrentAccount(accounts[0]);
+      const account = accounts[0];
+      setCurrentAccount(account);
 
+      // 2. [PENTING] Kirim Alamat ke Backend (Pemicu Auto-Faucet)
+      await syncWalletToBackend(account);
+
+      // 3. Load Smart Contract
       const contract = await getEthereumContract();
       setAcademicNftContract(contract);
     } catch (error) {
@@ -84,6 +120,9 @@ export const Web3Provider = ({ children }) => {
       ethereum.on("accountsChanged", async (accounts) => {
         if (accounts.length > 0) {
           setCurrentAccount(accounts[0]);
+          // Sync backend jika user ganti akun di metamask
+          syncWalletToBackend(accounts[0]);
+
           const contract = await getEthereumContract();
           setAcademicNftContract(contract);
         } else {

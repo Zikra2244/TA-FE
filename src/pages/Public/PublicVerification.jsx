@@ -360,7 +360,7 @@ const PublicVerification = () => {
                 className="btn-primary flex-1"
                 disabled={loading}
               >
-                {loading ? <div className="spinner"></div> : "Buka Dokumen"}
+                {loading ? <div className="spinner"></div> : "Mulai Verifikasi"}
               </button>
             </div>
           </form>

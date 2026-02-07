@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const CONTRACT_ADDRESS = "0x841a8616fd2167732a461494C4339d3069dC390c";
 
 import AcademicNFT_ABI from "./AcademicNFT.json";
 
