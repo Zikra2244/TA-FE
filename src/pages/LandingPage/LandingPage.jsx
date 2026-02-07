@@ -67,7 +67,7 @@ const LandingPage = () => {
           <div className="hero-content">
             <div className="hero-badge">
               <span className="pulse-dot"></span>
-              Live on Sepolia Testnet
+              Live on Sepolia Ethereum
             </div>
 
             <h1 className="hero-title">
