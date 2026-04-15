@@ -113,6 +113,56 @@ const ClaimCredential = () => {
   };
 
   if (successData) {
+    if (successData.alreadyClaimed) {
+      return (
+        <div className="holder-dashboard">
+          <Navbar />
+          <div
+            className="holder-container"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "80vh",
+            }}
+          >
+            <div
+              className="card"
+              style={{ maxWidth: "500px", textAlign: "center", borderTop: "4px solid #f59e0b" }}
+            >
+              <div style={{ margin: "0 auto 1.5rem", color: "#f59e0b" }}>
+                <AlertCircle
+                  size={64}
+                  style={{ display: "block", margin: "0 auto" }}
+                />
+              </div>
+              <h2
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  marginBottom: "0.5rem",
+                  color: "white",
+                }}
+              >
+                Sudah Pernah Diklaim
+              </h2>
+              <p style={{ color: "#94a3b8", marginBottom: "1.5rem", lineHeight: "1.6" }}>
+                Kredensial Anda (<strong>{successData.data.program_name || successData.data.document_type}</strong>) 
+                telah tersimpan dengan aman di dompet Anda. Anda tidak perlu memproses ulang klaim.
+              </p>
+              <button
+                onClick={() => navigate("/holder/dashboard")}
+                className="btn btn-primary"
+                style={{ backgroundColor: "#f59e0b", borderColor: "#d97706" }}
+              >
+                Kembali ke Dasbor Saya
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="holder-dashboard">
         <Navbar />
@@ -127,7 +177,7 @@ const ClaimCredential = () => {
         >
           <div
             className="card"
-            style={{ maxWidth: "500px", textAlign: "center" }}
+            style={{ maxWidth: "500px", textAlign: "center", borderTop: "4px solid #10b981" }}
           >
             <div style={{ margin: "0 auto 1.5rem", color: "#10b981" }}>
               <CheckCircle
@@ -149,27 +199,30 @@ const ClaimCredential = () => {
               {successData.message}
             </p>
 
-            <div className="tx-hash-box">
-              <p
-                style={{
-                  fontSize: "0.75rem",
-                  fontWeight: "bold",
-                  textTransform: "uppercase",
-                  color: "#64748b",
-                  marginBottom: "0.25rem",
-                }}
-              >
-                Transaction Hash
-              </p>
-              <a
-                href={`https://sepolia.etherscan.io/tx/${successData.txHash}`}
-                target="_blank"
-                rel="noreferrer"
-                className="tx-link"
-              >
-                {successData.txHash}
-              </a>
-            </div>
+            {successData.txHash && (
+              <div className="tx-hash-box" style={{ marginBottom: "1.5rem" }}>
+                <p
+                  style={{
+                    fontSize: "0.75rem",
+                    fontWeight: "bold",
+                    textTransform: "uppercase",
+                    color: "#64748b",
+                    marginBottom: "0.25rem",
+                  }}
+                >
+                  Transaction Hash
+                </p>
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${successData.txHash}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="tx-link"
+                >
+                  {successData.txHash}
+                </a>
+              </div>
+            )}
+            
             <button
               onClick={() => navigate("/holder/dashboard")}
               className="btn btn-primary"
