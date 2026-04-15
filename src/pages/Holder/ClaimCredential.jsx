@@ -124,38 +124,87 @@ const ClaimCredential = () => {
               justifyContent: "center",
               alignItems: "center",
               minHeight: "80vh",
+              animation: "fadeIn 0.5s ease-out",
             }}
           >
             <div
               className="card"
-              style={{ maxWidth: "500px", textAlign: "center", borderTop: "4px solid #f59e0b" }}
+              style={{
+                maxWidth: "450px",
+                textAlign: "center",
+                background: "linear-gradient(145deg, #1e293b, #0f172a)",
+                border: "1px solid rgba(14, 165, 233, 0.2)",
+                boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+                padding: "3rem 2rem",
+                borderRadius: "24px",
+                position: "relative",
+                overflow: "hidden"
+              }}
             >
-              <div style={{ margin: "0 auto 1.5rem", color: "#f59e0b" }}>
-                <AlertCircle
-                  size={64}
-                  style={{ display: "block", margin: "0 auto" }}
+              <div style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "4px",
+                background: "linear-gradient(90deg, #0ea5e9, #38bdf8)"
+              }}></div>
+              
+              <div style={{ 
+                margin: "0 auto 1.5rem", 
+                backgroundColor: "rgba(14, 165, 233, 0.1)",
+                width: "80px",
+                height: "80px",
+                borderRadius: "50%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                boxShadow: "0 0 20px rgba(14, 165, 233, 0.2)"
+              }}>
+                <ShieldCheck
+                  size={40}
+                  color="#38bdf8"
+                  strokeWidth={2}
                 />
               </div>
               <h2
                 style={{
                   fontSize: "1.5rem",
-                  fontWeight: "bold",
-                  marginBottom: "0.5rem",
+                  fontWeight: "800",
+                  marginBottom: "0.75rem",
                   color: "white",
+                  letterSpacing: "0.5px"
                 }}
               >
-                Sudah Pernah Diklaim
+                Kredensial Aman
               </h2>
-              <p style={{ color: "#94a3b8", marginBottom: "1.5rem", lineHeight: "1.6" }}>
-                Kredensial Anda (<strong>{successData.data.program_name || successData.data.document_type}</strong>) 
-                telah tersimpan dengan aman di dompet Anda. Anda tidak perlu memproses ulang klaim.
-              </p>
+              <div style={{
+                backgroundColor: "rgba(15, 23, 42, 0.6)",
+                border: "1px solid #334155",
+                borderRadius: "12px",
+                padding: "1rem",
+                marginBottom: "2rem"
+              }}>
+                <p style={{ color: "#e2e8f0", margin: 0, lineHeight: "1.6", fontSize: "0.95rem" }}>
+                  Anda telah mengklaim dokumen ini sebelumnya. <br/> 
+                  <strong style={{ color: "#38bdf8" }}>{successData.data.program_name || successData.data.document_type}</strong> 
+                  <br />sudah tersimpan di dompet Anda.
+                </p>
+              </div>
+              
               <button
                 onClick={() => navigate("/holder/dashboard")}
                 className="btn btn-primary"
-                style={{ backgroundColor: "#f59e0b", borderColor: "#d97706" }}
+                style={{
+                  background: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+                  boxShadow: "0 4px 15px rgba(2, 132, 199, 0.4)",
+                  width: "100%",
+                  padding: "1rem",
+                  borderRadius: "12px",
+                  fontSize: "1.05rem"
+                }}
               >
-                Kembali ke Dasbor Saya
+                Lihat Koleksi Kredensial Saya
               </button>
             </div>
           </div>
@@ -173,59 +222,136 @@ const ClaimCredential = () => {
             justifyContent: "center",
             alignItems: "center",
             minHeight: "80vh",
+            animation: "fadeIn 0.5s ease-out",
           }}
         >
           <div
             className="card"
-            style={{ maxWidth: "500px", textAlign: "center", borderTop: "4px solid #10b981" }}
+            style={{
+              maxWidth: "500px",
+              textAlign: "center",
+              background: "linear-gradient(145deg, #1e293b, #0f172a)",
+              border: "1px solid rgba(16, 185, 129, 0.2)",
+              boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+              padding: "3rem 2.5rem",
+              borderRadius: "24px",
+              position: "relative",
+              overflow: "hidden"
+            }}
           >
-            <div style={{ margin: "0 auto 1.5rem", color: "#10b981" }}>
+            <div style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "4px",
+              background: "linear-gradient(90deg, #10b981, #34d399)"
+            }}></div>
+
+            <div style={{ 
+              margin: "0 auto 1.5rem", 
+              backgroundColor: "rgba(16, 185, 129, 0.1)",
+              width: "80px",
+              height: "80px",
+              borderRadius: "50%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              boxShadow: "0 0 20px rgba(16, 185, 129, 0.2)"
+            }}>
               <CheckCircle
-                size={64}
-                style={{ display: "block", margin: "0 auto" }}
+                size={40}
+                color="#34d399"
+                strokeWidth={2}
               />
             </div>
             <h2
               style={{
-                fontSize: "1.5rem",
-                fontWeight: "bold",
+                fontSize: "1.75rem",
+                fontWeight: "800",
                 marginBottom: "0.5rem",
                 color: "white",
+                letterSpacing: "0.5px"
               }}
             >
               Klaim Berhasil!
             </h2>
-            <p style={{ color: "#94a3b8", marginBottom: "1.5rem" }}>
+            <p style={{ color: "#94a3b8", marginBottom: "2rem", fontSize: "1.05rem" }}>
               {successData.message}
             </p>
 
-            {successData.txHash && (
-              <div className="tx-hash-box" style={{ marginBottom: "1.5rem" }}>
-                <p
-                  style={{
-                    fontSize: "0.75rem",
-                    fontWeight: "bold",
-                    textTransform: "uppercase",
-                    color: "#64748b",
-                    marginBottom: "0.25rem",
-                  }}
-                >
-                  Transaction Hash
-                </p>
+            <div className="tx-hash-box" style={{ 
+              marginBottom: "2rem", 
+              background: "rgba(15, 23, 42, 0.6)",
+              border: "1px solid rgba(52, 211, 153, 0.2)",
+              borderRadius: "12px",
+              padding: "1.25rem",
+              position: "relative"
+            }}>
+              <p
+                style={{
+                  fontSize: "0.75rem",
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                  color: "#34d399",
+                  marginBottom: "0.5rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px"
+                }}
+              >
+                Bukti Transaksi Blockchain
+              </p>
+              
+              {successData.txHash ? (
                 <a
                   href={`https://sepolia.etherscan.io/tx/${successData.txHash}`}
                   target="_blank"
                   rel="noreferrer"
                   className="tx-link"
+                  style={{
+                    display: "block",
+                    fontFamily: "monospace",
+                    fontSize: "0.9rem",
+                    color: "#e2e8f0",
+                    wordBreak: "break-all",
+                    lineHeight: "1.4",
+                    textDecoration: "none",
+                    padding: "0.5rem",
+                    backgroundColor: "rgba(0,0,0,0.2)",
+                    borderRadius: "6px",
+                    transition: "all 0.2s"
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.color = '#34d399'; e.currentTarget.style.backgroundColor = 'rgba(16,185,129,0.1)' }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = '#e2e8f0'; e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.2)' }}
                 >
                   {successData.txHash}
                 </a>
-              </div>
-            )}
+              ) : (
+                <div style={{
+                  padding: "0.5rem",
+                  fontStyle: "italic",
+                  color: "#94a3b8",
+                  fontSize: "0.85rem",
+                  backgroundColor: "rgba(0,0,0,0.2)",
+                  borderRadius: "6px"
+                }}>
+                  Sinkronisasi wallet... (Silakan cek dashboard berkala)
+                </div>
+              )}
+            </div>
             
             <button
               onClick={() => navigate("/holder/dashboard")}
               className="btn btn-primary"
+              style={{
+                background: "linear-gradient(135deg, #059669 0%, #0d9488 100%)",
+                boxShadow: "0 4px 15px rgba(16, 185, 129, 0.3)",
+                width: "100%",
+                padding: "1rem",
+                borderRadius: "12px",
+                fontSize: "1.05rem"
+              }}
             >
               Lihat di Dashboard Saya
             </button>
