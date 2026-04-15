@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { ethers } from "ethers";
+import axios from "../api/axios";
 
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contracts/config";
 
@@ -16,25 +17,24 @@ export const Web3Provider = ({ children }) => {
   const syncWalletToBackend = async (walletAddress) => {
     try {
       const token = localStorage.getItem("token"); // Ambil JWT Token dari Login
-      if (!token) return; // Jika belum login, skip
+      if (!token) return true; // Jika belum login, abaikan
 
-      // Ganti URL sesuai port backend Anda (biasanya 3001)
-      const response = await fetch(
-        "http://localhost:3001/api/users/profile/wallet",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ walletAddress }),
-        }
+      const response = await axios.put(
+        "/users/profile/wallet",
+        { walletAddress },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const data = await response.json();
-      console.log("[Web3] Sync Wallet Success:", data.message);
+      console.log("[Web3] Sync Wallet Success:", response.data.message);
+      return true;
     } catch (error) {
       console.error("[Web3] Gagal sinkronisasi wallet ke backend:", error);
+      if (error.response && error.response.status === 403) {
+        alert(error.response.data.message);
+      } else {
+        alert("Gagal memvalidasi wallet di server.");
+      }
+      return false;
     }
   };
   // -------------------------------------
@@ -93,10 +93,17 @@ export const Web3Provider = ({ children }) => {
       });
 
       const account = accounts[0];
-      setCurrentAccount(account);
 
-      // 2. [PENTING] Kirim Alamat ke Backend (Pemicu Auto-Faucet)
-      await syncWalletToBackend(account);
+      // 2. [PENTING] Kirim Alamat ke Backend untuk validasi
+      const isSyncSuccess = await syncWalletToBackend(account);
+      
+      if (!isSyncSuccess) {
+        // Jika sinkronisasi gagal (karena akun sudah terikat wallet lain)
+        throw new Error("Validasi wallet ditolak oleh server.");
+      }
+
+      // Barulah update antarmuka (UI) jika sukses sinkron ke server
+      setCurrentAccount(account);
 
       // 3. Load Smart Contract
       const contract = await getEthereumContract();
@@ -119,12 +126,16 @@ export const Web3Provider = ({ children }) => {
     if (ethereum) {
       ethereum.on("accountsChanged", async (accounts) => {
         if (accounts.length > 0) {
-          setCurrentAccount(accounts[0]);
-          // Sync backend jika user ganti akun di metamask
-          syncWalletToBackend(accounts[0]);
-
-          const contract = await getEthereumContract();
-          setAcademicNftContract(contract);
+          const isSyncSuccess = await syncWalletToBackend(accounts[0]);
+          if (isSyncSuccess) {
+            setCurrentAccount(accounts[0]);
+            const contract = await getEthereumContract();
+            setAcademicNftContract(contract);
+          } else {
+            // Putuskan koneksi UI jika wallet yang ditukar berbeda dari milik backend
+            setCurrentAccount(null);
+            setAcademicNftContract(null);
+          }
         } else {
           setCurrentAccount(null);
           setAcademicNftContract(null);
