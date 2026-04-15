@@ -186,6 +186,68 @@ const ClaimCredential = () => {
     <div className="holder-dashboard">
       <Navbar />
 
+      {/* --- ERROR MODAL POPUP --- */}
+      {error && (
+        <div style={{
+          position: "fixed",
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.75)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999,
+          backdropFilter: "blur(4px)"
+        }}>
+          <div className="card animate-fadeIn" style={{
+            maxWidth: "400px",
+            width: "90%",
+            textAlign: "center",
+            padding: "2rem",
+            position: "relative",
+            borderTop: "4px solid #ef4444"
+          }}>
+            <div style={{ margin: "0 auto 1rem", color: "#f87171" }}>
+              <AlertCircle
+                size={56}
+                strokeWidth={1.5}
+                style={{ display: "block", margin: "0 auto" }}
+              />
+            </div>
+            <h2 style={{
+              fontSize: "1.25rem",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+              color: "white",
+            }}>
+              Klaim Ditolak
+            </h2>
+            <div style={{
+              backgroundColor: "#202020",
+              padding: "1rem",
+              borderRadius: "8px",
+              marginBottom: "1.5rem",
+              border: "1px solid #334155"
+            }}>
+              <p style={{ color: "#e2e8f0", fontSize: "0.95rem", lineHeight: "1.5", margin: 0 }}>
+                {error}
+              </p>
+            </div>
+            <button
+              onClick={() => setError("")}
+              className="btn btn-primary"
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                borderRadius: "8px",
+                fontWeight: "600"
+              }}
+            >
+              Mengerti & Tutup
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="holder-container">
         <header
           className="dashboard-header"
